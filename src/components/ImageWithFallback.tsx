@@ -16,47 +16,82 @@ interface ImageWithFallbackProps {
   width?: number;
   height?: number;
   style?: React.CSSProperties;
+  sizes?: string;
+  quality?: number;
 }
 
+/**
+ * ImageWithFallback - Next.js Image component with error fallback.
+ * Uses next/image for automatic optimization (WebP/AVIF, lazy loading, srcset).
+ */
 export function ImageWithFallback({
   src,
   alt,
   className,
   priority = false,
   loading,
-  fill = true,
+  fill = false,
   width,
   height,
   style,
-  ...rest
+  sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw",
+  quality = 80,
 }: ImageWithFallbackProps) {
   const [didError, setDidError] = useState(false);
 
   if (didError) {
     return (
       <div
-        className={`inline-block bg-gray-100 text-center align-middle ${className ?? ""}`}
+        className={`inline-block bg-[#1a1a1a] text-center align-middle ${className ?? ""}`}
         style={style}
+        role="img"
+        aria-label={`خطأ في تحميل الصورة: ${alt}`}
       >
-        <div className="flex items-center justify-center w-full h-full">
+        <div className="flex items-center justify-center w-full h-full min-h-[80px]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={ERROR_IMG_SRC} alt="Error loading image" data-original-url={src} />
+          <img
+            src={ERROR_IMG_SRC}
+            alt="خطأ في تحميل الصورة"
+            width={88}
+            height={88}
+            data-original-url={src}
+          />
         </div>
       </div>
     );
   }
 
-  // For external images, use next/image with unoptimized for simpler setup
+  // Use next/image for optimization
+  if (fill) {
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className={className}
+        style={style}
+        sizes={sizes}
+        quality={quality}
+        priority={priority}
+        loading={priority ? "eager" : loading || "lazy"}
+        onError={() => setDidError(true)}
+      />
+    );
+  }
+
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <Image
       src={src}
       alt={alt}
+      width={width || 800}
+      height={height || 600}
       className={className}
       style={style}
+      sizes={sizes}
+      quality={quality}
+      priority={priority}
       loading={priority ? "eager" : loading || "lazy"}
       onError={() => setDidError(true)}
-      {...rest}
     />
   );
 }

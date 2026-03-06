@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const heroImg = "https://images.unsplash.com/photo-1749517841197-76792f2b0cd9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=90&w=1920";
 const teamImg = "https://images.unsplash.com/photo-1770739576489-cd201676b898?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800";
@@ -33,6 +34,7 @@ const team = [
 export default function AboutClient() {
   return (
     <div>
+      <Breadcrumbs />
       {/* HERO */}
       <section className="relative pt-32 pb-20 px-4 overflow-hidden">
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 20%, rgba(184,134,11,0.08) 0%, transparent 60%)" }} />

@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const WA = "966535636933";
 
@@ -113,6 +114,7 @@ export default function PortfolioClient() {
 
   return (
     <div>
+      <Breadcrumbs />
       {/* HERO */}
       <section className="relative pt-32 pb-16 px-4 overflow-hidden">
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 20%, rgba(184,134,11,0.08) 0%, transparent 60%)" }} />

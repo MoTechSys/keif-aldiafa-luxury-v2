@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const WA = "966535636933";
 const coffeeImg = "https://images.unsplash.com/photo-1670351230643-27f874d17025?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800";
@@ -80,6 +81,7 @@ export default function OfferingsClient() {
 
   return (
     <div>
+      <Breadcrumbs />
       {/* HERO */}
       <section className="relative pt-32 pb-16 px-4 overflow-hidden">
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 20%, rgba(184,134,11,0.08) 0%, transparent 60%)" }} />
