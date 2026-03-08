@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/admin/", "/private/", "/_next/"],
+        disallow: ["/api/", "/admin/", "/private/"],
       },
     ],
     sitemap: "https://keifaldiafa.com/sitemap.xml",
