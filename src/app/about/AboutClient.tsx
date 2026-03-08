@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { HERO_IMG as heroImg, TEAM_IMG as teamImg, GALA_IMG as galaImg, CONF_IMG as confImg } from "@/lib/images";
+import { HERO_IMG as heroImg } from "@/lib/images";
 
 const values = [
   { icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7"><path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>, title: "الجودة أولاً", desc: "نلتزم بأعلى معايير الجودة في كل تفصيلة من خدماتنا" },
@@ -12,20 +12,7 @@ const values = [
   { icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7"><path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" /></svg>, title: "الابتكار", desc: "نبتكر أساليب جديدة ومبهرة في تقديم خدمات الضيافة" },
 ];
 
-const milestones = [
-  { year: "2016", event: "تأسيس كيف الضيافة" },
-  { year: "2018", event: "توسع الخدمات لتشمل جميع مناطق المملكة" },
-  { year: "2020", event: "شراكة مع أرامكو السعودية" },
-  { year: "2022", event: "تجاوز ٣٠٠ مناسبة ناجحة" },
-  { year: "2024", event: "إطلاق خدمات الفنون والتراث" },
-  { year: "2026", event: "تجاوز ٥٠٠ مناسبة و+٢٠٠ عميل" },
-];
 
-const team = [
-  { name: "محمد العمري", role: "المدير التنفيذي", img: teamImg },
-  { name: "سعود الشمري", role: "مدير العمليات", img: galaImg },
-  { name: "خالد الزهراني", role: "مدير تطوير الأعمال", img: confImg },
-];
 
 export default function AboutClient() {
   return (
@@ -88,80 +75,7 @@ export default function AboutClient() {
         </div>
       </section>
 
-      {/* TIMELINE */}
-      <section className="py-20 px-4">
-        <div className="max-w-3xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} className="text-center mb-14">
-            <p className="text-[#B8860B] mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.35em" }}>✦ رحلتنا ✦</p>
-            <h2 className="text-[#F5F5DC]" style={{ fontSize: "clamp(1.6rem, 4.5vw, 2.4rem)", fontWeight: 800}}>محطات النجاح</h2>
-            <div className="mt-4 rounded-full mx-auto" style={{ width: 90, height: 2, background: "linear-gradient(90deg, transparent, #B8860B 30%, #D4A017 60%, transparent)" }} />
-          </motion.div>
-          <div className="relative">
-            <div className="absolute top-0 bottom-0 right-6 w-px" style={{ background: "linear-gradient(180deg, transparent, rgba(184,134,11,0.3), transparent)" }} />
-            <div className="space-y-8">
-              {milestones.map((m, i) => (
-                <motion.div key={i} initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ delay: i * 0.08 }} className="flex items-start gap-6 pr-2">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center z-10" style={{ background: "linear-gradient(135deg, rgba(184,134,11,0.2), rgba(184,134,11,0.05))", border: "2px solid rgba(184,134,11,0.4)" }}>
-                    <span className="text-[#B8860B] text-xs" style={{ fontWeight: 800 }}>{m.year}</span>
-                  </div>
-                  <div className="pt-2">
-                    <p className="text-[#F5F5DC] text-sm" style={{ fontWeight: 600 }}>{m.event}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* TEAM */}
-      <section className="py-20 px-4" style={{ background: "linear-gradient(180deg, #0f0f0f 0%, #0d0b04 100%)" }}>
-        <div className="max-w-5xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} className="text-center mb-14">
-            <p className="text-[#B8860B] mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.35em" }}>✦ فريقنا ✦</p>
-            <h2 className="text-[#F5F5DC]" style={{ fontSize: "clamp(1.6rem, 4.5vw, 2.4rem)", fontWeight: 800}}>فريق القيادة</h2>
-            <div className="mt-4 rounded-full mx-auto" style={{ width: 90, height: 2, background: "linear-gradient(90deg, transparent, #B8860B 30%, #D4A017 60%, transparent)" }} />
-          </motion.div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {team.map((t, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ delay: i * 0.1 }} className="card-luxury rounded-2xl overflow-hidden text-center">
-                <div className="relative h-56 overflow-hidden">
-                  <ImageWithFallback src={t.img} alt={t.name} className="w-full h-full object-cover" loading="lazy" />
-                  <div className="absolute inset-0 img-overlay" />
-                </div>
-                <div className="p-5">
-                  <h3 className="text-[#F5F5DC]" style={{ fontSize: "1.05rem", fontWeight: 700 }}>{t.name}</h3>
-                  <p className="text-[#B8860B]/60 text-xs mt-1">{t.role}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CERTIFICATIONS */}
-      <section className="py-20 px-4">
-        <div className="max-w-5xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} className="text-center mb-14">
-            <p className="text-[#B8860B] mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.35em" }}>✦ اعتماداتنا ✦</p>
-            <h2 className="text-[#F5F5DC]" style={{ fontSize: "clamp(1.6rem, 4.5vw, 2.4rem)", fontWeight: 800}}>الشهادات والاعتمادات</h2>
-            <div className="mt-4 rounded-full mx-auto" style={{ width: 90, height: 2, background: "linear-gradient(90deg, transparent, #B8860B 30%, #D4A017 60%, transparent)" }} />
-          </motion.div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { name: "ISO 9001:2015", icon: "🏅" },
-              { name: "شهادة التميز 2024", icon: "⭐" },
-              { name: "الغرفة التجارية", icon: "🏛" },
-              { name: "شريك رؤية 2030", icon: "🇸🇦" },
-            ].map((cert, i) => (
-              <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, margin: "-50px" }} transition={{ delay: i * 0.1 }} className="card-luxury p-5 rounded-2xl text-center">
-                <span className="text-3xl mb-3 block">{cert.icon}</span>
-                <p className="text-[#F5F5DC] text-sm" style={{ fontWeight: 600 }}>{cert.name}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
