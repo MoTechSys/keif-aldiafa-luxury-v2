@@ -12,7 +12,7 @@ import {
   FOOD_IMG as foodImg,
 } from "@/lib/images";
 
-const WA = "966535636933";
+const WA = "966508252134";
 
 interface OfferingItem { name: string; description: string; img: string; }
 interface CategoryData { id: string; label: string; icon: string; description: string; items: OfferingItem[]; }

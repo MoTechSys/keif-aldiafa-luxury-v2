@@ -13,7 +13,7 @@ import {
   SERVICES_ARTISTIC,
 } from "@/lib/images";
 
-const WA = "966535636933";
+const WA = "966508252134";
 
 interface OutfitItem { name: string; img: string; desc: string; }
 interface ServiceItem { id: string; title: string; subtitle: string; img: string; description: string; features: string[]; outfits: OutfitItem[]; }

@@ -119,10 +119,10 @@ export const SEO_CONSTANTS = {
   SITE_URL,
   SITE_NAME,
   DEFAULT_OG_IMAGE,
-  PHONE: "+966535636933",
+  PHONE: "+966508252134",
   EMAIL: "info@keifdiafa.com",
-  WHATSAPP: "966535636933",
-  INSTAGRAM: "https://instagram.com/keifdiafa",
+  WHATSAPP: "966508252134",
+  INSTAGRAM: "https://www.instagram.com/keifaldiafa",
   ADDRESS: {
     city: "الرياض",
     region: "منطقة الرياض",

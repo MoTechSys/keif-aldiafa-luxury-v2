@@ -2,7 +2,7 @@
 
 const SITE_URL = "https://keifaldiafa.com";
 const SITE_NAME = "كيف الضيافة";
-const PHONE = "+966535636933";
+const PHONE = "+966508252134";
 const EMAIL = "info@keifdiafa.com";
 
 export function generateOrganizationSchema() {
@@ -21,8 +21,8 @@ export function generateOrganizationSchema() {
       areaServed: "SA",
     },
     sameAs: [
-      "https://instagram.com/keifdiafa",
-      `https://wa.me/966535636933`,
+      "https://www.instagram.com/keifaldiafa",
+      `https://wa.me/966508252134`,
     ],
   };
 }
@@ -72,8 +72,8 @@ export function generateLocalBusinessSchema() {
       name: "Saudi Arabia",
     },
     sameAs: [
-      "https://instagram.com/keifdiafa",
-      `https://wa.me/966535636933`,
+      "https://www.instagram.com/keifaldiafa",
+      `https://wa.me/966508252134`,
     ],
     aggregateRating: {
       "@type": "AggregateRating",

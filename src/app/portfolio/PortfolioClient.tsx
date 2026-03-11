@@ -18,7 +18,7 @@ import {
   FOOD_IMG as foodImg,
 } from "@/lib/images";
 
-const WA = "966535636933";
+const WA = "966508252134";
 
 type FilterType = "all" | "events" | "hospitality" | "food" | "behind";
 
