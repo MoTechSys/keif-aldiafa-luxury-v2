@@ -98,7 +98,7 @@ export default function Navbar() {
                 transition={{ duration: 3, repeat: Infinity }}
               />
             </motion.div>
-            <div className="hidden md:block">
+            <div className="block">
               <span className="block gold-gradient-text" style={{ fontSize: "1.15rem", fontWeight: 800, lineHeight: 1.1 }}>
                 كيف الضيافة
               </span>
