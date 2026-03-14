@@ -237,7 +237,7 @@ function Lightbox({
             <ImageWithFallback
               src={item.image}
               alt={`صورة ${index + 1}`}
-              className="w-full h-full object-contain"
+              className="max-w-full max-h-full w-auto h-auto object-contain"
               priority
             />
           </motion.div>
