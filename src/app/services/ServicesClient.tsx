@@ -107,7 +107,7 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
         <button onClick={onClose} className="absolute top-4 left-4 z-20 w-10 h-10 rounded-full flex items-center justify-center text-[#F5F5DC]/60 hover:text-[#F5F5DC] transition-colors" style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(10px)" }}>✕</button>
         
         {/* Image Section */}
-        <div className="relative w-full md:w-1/2 aspect-[3/4] md:aspect-auto overflow-hidden touch-none">
+        <div className="relative w-full md:w-1/2 aspect-[3/4] md:aspect-auto overflow-hidden touch-none flex-shrink-0">
           <motion.div
             key={selectedOutfit}
             drag="x"
@@ -118,7 +118,7 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
             <ImageWithFallback
               src={service.outfits.length > 0 ? service.outfits[selectedOutfit].img : service.img}
               alt={service.outfits.length > 0 ? service.outfits[selectedOutfit].name : service.title}
-                className="w-full h-full object-cover pointer-events-none"
+              className="w-full h-full object-cover pointer-events-none"
             />
           </motion.div>
           <div className="absolute inset-0 img-overlay md:hidden" />
@@ -129,7 +129,7 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
         </div>
 
         {/* Content Section */}
-        <div className="w-full md:w-1/2 p-4 sm:p-8 overflow-y-auto flex flex-col justify-center">
+        <div className="w-full md:w-1/2 p-4 sm:p-8 overflow-y-auto flex flex-col bg-[#0A0802]">
           <div className="hidden md:block mb-6">
             <p className="text-[#B8860B] text-xs mb-1" style={{ letterSpacing: "0.15em" }}>{service.subtitle}</p>
             <h2 className="text-[#F5F5DC]" style={{ fontSize: "2.2rem", fontWeight: 800, lineHeight: 1.2 }}>{service.title}</h2>
