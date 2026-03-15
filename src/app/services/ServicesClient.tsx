@@ -108,25 +108,19 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
         
         {/* Image Section */}
         <div className="relative w-full md:w-1/2 aspect-[3/4] md:aspect-auto overflow-hidden touch-none">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={selectedOutfit}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              onDragEnd={handleDragEnd}
-              className="w-full h-full cursor-grab active:cursor-grabbing"
-            >
-              <ImageWithFallback
-                src={service.outfits.length > 0 ? service.outfits[selectedOutfit].img : service.img}
-                alt={service.outfits.length > 0 ? service.outfits[selectedOutfit].name : service.title}
-                className="w-full h-full object-fill pointer-events-none"
-              />
-            </motion.div>
-          </AnimatePresence>
+          <motion.div
+            key={selectedOutfit}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            onDragEnd={handleDragEnd}
+            className="w-full h-full cursor-grab active:cursor-grabbing"
+          >
+            <ImageWithFallback
+              src={service.outfits.length > 0 ? service.outfits[selectedOutfit].img : service.img}
+              alt={service.outfits.length > 0 ? service.outfits[selectedOutfit].name : service.title}
+              className="w-full h-full object-fill pointer-events-none"
+            />
+          </motion.div>
           <div className="absolute inset-0 img-overlay md:hidden" />
           <div className="absolute bottom-0 left-0 right-0 p-6 md:hidden">
             <p className="text-[#B8860B] text-xs mb-1" style={{ letterSpacing: "0.15em" }}>{service.subtitle}</p>
