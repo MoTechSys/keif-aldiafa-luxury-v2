@@ -103,11 +103,11 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[80] flex items-center justify-center p-1 sm:p-4" onClick={onClose} role="dialog" aria-modal="true" aria-label={`تفاصيل خدمة ${service.title}`}>
       <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
-      <motion.div initial={{ opacity: 0, scale: 0.92, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.92, y: 30 }} transition={{ type: "spring", damping: 25, stiffness: 250 }} onClick={(e) => e.stopPropagation()} className="relative w-[98%] sm:max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl flex flex-col" style={{ background: "linear-gradient(160deg, rgba(25,20,8,0.98), rgba(15,12,5,0.99))", border: "1px solid rgba(184,134,11,0.25)", boxShadow: "0 40px 80px rgba(0,0,0,0.8)" }}>
+      <motion.div initial={{ opacity: 0, scale: 0.92, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.92, y: 30 }} transition={{ type: "spring", damping: 25, stiffness: 250 }} onClick={(e) => e.stopPropagation()} className="relative w-[98%] sm:max-w-4xl max-h-[90vh] overflow-hidden rounded-3xl flex flex-col md:flex-row" style={{ background: "linear-gradient(160deg, rgba(25,20,8,0.98), rgba(15,12,5,0.99))", border: "1px solid rgba(184,134,11,0.25)", boxShadow: "0 40px 80px rgba(0,0,0,0.8)" }}>
         <button onClick={onClose} className="absolute top-4 left-4 z-20 w-10 h-10 rounded-full flex items-center justify-center text-[#F5F5DC]/60 hover:text-[#F5F5DC] transition-colors" style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(10px)" }}>✕</button>
         
         {/* Image Section with Gallery Swipe */}
-        <div className="relative w-full aspect-[3/4] sm:aspect-[16/10] overflow-hidden touch-none flex-shrink-0">
+        <div className="relative w-full md:w-1/2 aspect-[3/4] md:aspect-auto overflow-hidden touch-none flex-shrink-0">
           <div className="flex w-full h-full transition-transform duration-500 ease-out" style={{ transform: `translateX(-${selectedOutfit * 100}%)`, direction: 'ltr' }}>
             {service.outfits.length > 0 ? (
               service.outfits.map((o, i) => (
@@ -130,8 +130,8 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
             className="absolute inset-0 z-10 cursor-grab active:cursor-grabbing"
           />
 
-          <div className="absolute inset-0 img-overlay pointer-events-none" />
-          <div className="absolute bottom-0 left-0 right-0 p-6">
+          <div className="absolute inset-0 img-overlay md:hidden pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:hidden">
             <p className="text-[#B8860B] text-xs mb-1" style={{ letterSpacing: "0.15em" }}>{service.subtitle}</p>
             <h2 className="text-[#F5F5DC]" style={{ fontSize: "1.8rem", fontWeight: 800}}>{service.title}</h2>
             {service.outfits.length > 0 && (
@@ -140,29 +140,37 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
           </div>
         </div>
 
-        {/* Content Section - Compacted */}
-        <div className="p-3 sm:p-6">
-          <p className="text-[#F5F5DC]/65 text-[11px] leading-tight mb-2 line-clamp-2">{service.description}</p>
+        {/* Content Section - Responsive Layout */}
+        <div className="w-full md:w-1/2 p-3 sm:p-8 overflow-y-auto flex flex-col bg-[#0A0802]/40 backdrop-blur-sm">
+          <div className="hidden md:block mb-6">
+            <p className="text-[#B8860B] text-xs mb-1" style={{ letterSpacing: "0.15em" }}>{service.subtitle}</p>
+            <h2 className="text-[#F5F5DC]" style={{ fontSize: "2.2rem", fontWeight: 800, lineHeight: 1.2 }}>{service.title}</h2>
+            {service.outfits.length > 0 && (
+              <p className="text-[#B8860B] text-sm mt-2 font-medium">{service.outfits[selectedOutfit].name}</p>
+            )}
+          </div>
+
+          <p className="text-[#F5F5DC]/65 text-[11px] md:text-base leading-tight md:leading-relaxed mb-4 md:mb-6 line-clamp-3 md:line-clamp-none">{service.description}</p>
           
-          <div className="grid grid-cols-2 gap-1.5 mb-3">
+          <div className="grid grid-cols-2 gap-1.5 md:gap-4 mb-4 md:mb-8">
             {service.features.map((f, i) => (
-              <div key={i} className="flex items-center gap-1.5">
-                <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "rgba(184,134,11,0.15)", border: "1px solid rgba(184,134,11,0.2)" }}>
-                  <svg viewBox="0 0 16 16" fill="#B8860B" className="w-2.5 h-2.5"><path d="M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z" /></svg>
+              <div key={i} className="flex items-center gap-1.5 md:gap-3">
+                <div className="w-4 h-4 md:w-5 md:h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "rgba(184,134,11,0.15)", border: "1px solid rgba(184,134,11,0.2)" }}>
+                  <svg viewBox="0 0 16 16" fill="#B8860B" className="w-2.5 h-2.5 md:w-3 md:h-3"><path d="M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z" /></svg>
                 </div>
-                <span className="text-[#F5F5DC]/60 text-[10px]">{f}</span>
+                <span className="text-[#F5F5DC]/60 md:text-[#F5F5DC]/70 text-[10px] md:text-sm">{f}</span>
               </div>
             ))}
           </div>
 
           {service.outfits.length > 0 && (
-            <div className="mb-2">
-              <h3 className="text-[#B8860B] text-[10px] mb-1 uppercase tracking-wider font-bold">الأزياء المتاحة</h3>
-              <div className="flex gap-1.5 overflow-x-auto scroll-hide pb-0.5">
+            <div className="mt-auto">
+              <h3 className="text-[#B8860B] text-[10px] md:text-xs mb-2 md:mb-3 uppercase tracking-wider font-bold">الأزياء المتاحة</h3>
+              <div className="flex gap-1.5 md:gap-2 overflow-x-auto scroll-hide pb-1 md:pb-2">
                 {service.outfits.map((o, i) => (
-                  <button key={i} onClick={() => setSelectedOutfit(i)} className="flex-shrink-0 w-16 rounded-lg overflow-hidden transition-all duration-300 group" style={{ border: selectedOutfit === i ? "1.5px solid #B8860B" : "1.5px solid rgba(184,134,11,0.1)", opacity: selectedOutfit === i ? 1 : 0.5 }}>
-                    <ImageWithFallback src={o.img} alt={o.name} className="w-full h-12 object-cover group-hover:scale-110 transition-transform duration-500" />
-                    <p className="text-center text-[8px] py-0.5 text-[#F5F5DC]/60 bg-black/40">{o.name}</p>
+                  <button key={i} onClick={() => setSelectedOutfit(i)} className="flex-shrink-0 w-16 md:w-20 rounded-lg md:rounded-xl overflow-hidden transition-all duration-300 group" style={{ border: selectedOutfit === i ? "1.5px solid #B8860B" : "1.5px solid rgba(184,134,11,0.1)", opacity: selectedOutfit === i ? 1 : 0.5 }}>
+                    <ImageWithFallback src={o.img} alt={o.name} className="w-full h-12 md:h-16 object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <p className="text-center text-[8px] md:text-[10px] py-0.5 md:py-1 text-[#F5F5DC]/60 bg-black/40">{o.name}</p>
                   </button>
                 ))}
               </div>
