@@ -108,7 +108,7 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
         
         {/* Image Section with Gallery Swipe */}
         <div className="relative w-full aspect-[3/4] sm:aspect-[16/10] overflow-hidden touch-none flex-shrink-0">
-          <div className="flex w-full h-full transition-transform duration-500 ease-out" style={{ transform: `translateX(-${selectedOutfit * 100}%)` }}>
+          <div className="flex w-full h-full transition-transform duration-500 ease-out" style={{ transform: `translateX(-${selectedOutfit * 100}%)`, direction: 'ltr' }}>
             {service.outfits.length > 0 ? (
               service.outfits.map((o, i) => (
                 <div key={i} className="w-full h-full flex-shrink-0">
