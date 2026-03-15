@@ -7,8 +7,8 @@ import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 import { HERO_IMG, HERO_MOBILE_IMG } from "@/lib/images";
 
-const PartnersSlider = lazy(() =>
-  import("@/components/PartnersSlider").then((m) => ({ default: m.PartnersSlider }))
+const PartnersMarquee = lazy(() =>
+  import("@/components/PartnersMarquee").then((m) => ({ default: m.PartnersMarquee }))
 );
 const WA = "966508252134";
 
@@ -305,7 +305,7 @@ export function HomePageClient() {
       <section className="relative py-16 sm:py-20 bg-[#0f0f0f]">
         <div className="container mx-auto px-4">
           <Suspense fallback={<div className="h-32 bg-[#1a1a1a] rounded-lg animate-pulse" />}>
-            <PartnersSlider />
+            <PartnersMarquee />
           </Suspense>
         </div>
       </section>
