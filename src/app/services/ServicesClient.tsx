@@ -96,7 +96,7 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
           <ImageWithFallback
             src={service.outfits.length > 0 ? service.outfits[selectedOutfit].img : service.img}
             alt={service.outfits.length > 0 ? service.outfits[selectedOutfit].name : service.title}
-            className="w-full h-full object-cover transition-all duration-500"
+            className="w-full h-full object-fill transition-all duration-500"
           />
           <div className="absolute inset-0 img-overlay" />
           <div className="absolute bottom-0 left-0 right-0 p-6">
