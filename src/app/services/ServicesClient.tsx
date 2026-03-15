@@ -92,7 +92,7 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
       <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
       <motion.div initial={{ opacity: 0, scale: 0.92, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.92, y: 30 }} transition={{ type: "spring", damping: 25, stiffness: 250 }} onClick={(e) => e.stopPropagation()} className="relative max-w-3xl w-full max-h-[90vh] overflow-y-auto rounded-3xl" style={{ background: "linear-gradient(160deg, rgba(25,20,8,0.98), rgba(15,12,5,0.99))", border: "1px solid rgba(184,134,11,0.25)", boxShadow: "0 40px 80px rgba(0,0,0,0.8)" }}>
         <button onClick={onClose} className="absolute top-4 left-4 z-10 w-10 h-10 rounded-full flex items-center justify-center text-[#F5F5DC]/60 hover:text-[#F5F5DC] transition-colors" style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(10px)" }}>✕</button>
-        <div className="relative w-full aspect-video overflow-hidden rounded-t-3xl">
+        <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden rounded-t-3xl">
           <ImageWithFallback
             src={service.outfits.length > 0 ? service.outfits[selectedOutfit].img : service.img}
             alt={service.outfits.length > 0 ? service.outfits[selectedOutfit].name : service.title}
@@ -107,21 +107,21 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
             )}
           </div>
         </div>
-        <div className="p-6 sm:p-8">
-          <p className="text-[#F5F5DC]/65 text-sm leading-relaxed mb-6">{service.description}</p>
-          <div className="grid grid-cols-2 gap-3 mb-6">
+        <div className="p-5 sm:p-6">
+          <p className="text-[#F5F5DC]/65 text-sm leading-relaxed mb-4">{service.description}</p>
+          <div className="grid grid-cols-2 gap-2 mb-4">
             {service.features.map((f, i) => (
               <div key={i} className="flex items-center gap-2"><div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "rgba(184,134,11,0.15)", border: "1px solid rgba(184,134,11,0.3)" }}><svg viewBox="0 0 16 16" fill="#B8860B" className="w-3 h-3"><path d="M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z" /></svg></div><span className="text-[#F5F5DC]/60 text-sm">{f}</span></div>
             ))}
           </div>
           {service.outfits.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-[#B8860B] text-sm mb-3" style={{ fontWeight: 700 }}>الأزياء المتاحة</h3>
-              <div className="flex gap-3 overflow-x-auto scroll-hide pb-2">
+            <div className="mb-4">
+              <h3 className="text-[#B8860B] text-xs mb-2" style={{ fontWeight: 700 }}>الأزياء المتاحة</h3>
+              <div className="flex gap-2 overflow-x-auto scroll-hide pb-1">
                 {service.outfits.map((o, i) => (
-                  <button key={i} onClick={() => setSelectedOutfit(i)} className="flex-shrink-0 w-24 rounded-xl overflow-hidden transition-all duration-300" style={{ border: selectedOutfit === i ? "2px solid #B8860B" : "2px solid rgba(184,134,11,0.1)", opacity: selectedOutfit === i ? 1 : 0.6 }}>
-                    <ImageWithFallback src={o.img} alt={o.name} className="w-full h-20 object-cover" />
-                    <p className="text-center text-xs py-1 text-[#F5F5DC]/60">{o.name}</p>
+                  <button key={i} onClick={() => setSelectedOutfit(i)} className="flex-shrink-0 w-20 rounded-lg overflow-hidden transition-all duration-300" style={{ border: selectedOutfit === i ? "2px solid #B8860B" : "2px solid rgba(184,134,11,0.1)", opacity: selectedOutfit === i ? 1 : 0.6 }}>
+                    <ImageWithFallback src={o.img} alt={o.name} className="w-full h-16 object-cover" />
+                    <p className="text-center text-[10px] py-0.5 text-[#F5F5DC]/60">{o.name}</p>
                   </button>
                 ))}
               </div>
