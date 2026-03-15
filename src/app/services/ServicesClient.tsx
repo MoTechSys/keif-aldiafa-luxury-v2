@@ -121,7 +121,7 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
               className="w-full h-full object-cover pointer-events-none"
             />
           </motion.div>
-          <div className="absolute inset-0 img-overlay md:hidden" />
+          <div className="absolute inset-0 img-overlay md:hidden pointer-events-none" />
           <div className="absolute bottom-0 left-0 right-0 p-6 md:hidden">
             <p className="text-[#B8860B] text-xs mb-1" style={{ letterSpacing: "0.15em" }}>{service.subtitle}</p>
             <h2 className="text-[#F5F5DC]" style={{ fontSize: "1.8rem", fontWeight: 800}}>{service.title}</h2>
