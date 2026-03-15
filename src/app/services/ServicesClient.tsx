@@ -140,7 +140,7 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
 
           <p className="text-[#F5F5DC]/65 text-sm md:text-base leading-relaxed mb-6">{service.description}</p>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+          <div className="grid grid-cols-2 gap-3 mb-8">
             {service.features.map((f, i) => (
               <div key={i} className="flex items-center gap-3">
                 <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "rgba(184,134,11,0.15)", border: "1px solid rgba(184,134,11,0.3)" }}>
