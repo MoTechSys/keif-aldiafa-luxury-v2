@@ -38,12 +38,17 @@ const allPartners = [
   { id: 30, name: "Hamat Leading", logo: "/images/partners/30_Hamat_Leading.webp" },
 ];
 
-// Partner card component - Optimized for all devices
+// دالة رياضية فائقة الدقة لضمان التفاف المسبحة (Seamless Wrap) بدون أي فراغات
+const wrap = (min: number, max: number, v: number) => {
+  const rangeSize = max - min;
+  return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
+};
+
 function PartnerCard({ partner }: { partner: (typeof allPartners)[0] }) {
   return (
     <div className="flex-shrink-0 select-none px-2 sm:px-3" style={{ width: "clamp(110px, 25vw, 160px)" }}>
       <div
-        className="relative h-16 sm:h-20 rounded-xl flex items-center justify-center cursor-grab active:cursor-grabbing transition-all duration-300 hover:border-[rgba(184,134,11,0.4)] group"
+        className="relative h-16 sm:h-20 rounded-xl flex items-center justify-center transition-all duration-300 hover:border-[rgba(184,134,11,0.4)] group"
         style={{
           background: "rgba(20,16,6,0.4)",
           border: "1px solid rgba(184,134,11,0.12)",
@@ -54,7 +59,7 @@ function PartnerCard({ partner }: { partner: (typeof allPartners)[0] }) {
           <ImageWithFallback
             src={partner.logo}
             alt={partner.name}
-            className="w-full h-full object-contain brightness-110 contrast-110 grayscale group-hover:grayscale-0 transition-all duration-500"
+            className="w-full h-full object-contain brightness-110 contrast-110 grayscale group-hover:grayscale-0 transition-all duration-500 pointer-events-none"
             loading="lazy"
             width={60}
             height={60}
@@ -74,64 +79,69 @@ interface MarqueeRowProps {
 
 function MarqueeRow({ items, baseVelocity = 1, direction = "rtl" }: MarqueeRowProps) {
   const baseX = useMotionValue(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState(0);
+  const [contentWidth, setContentWidth] = useState(0);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  // Triple the items to ensure seamless loop even on large screens
-  const tripledItems = useMemo(() => [...items, ...items, ...items], [items]);
+  // نستخدم 4 مجموعات (بدلاً من 3) لضمان عدم وجود أي فراغ مهما كانت شاشة المستخدم عملاقة أو تم سحب الشريط بقوة
+  const sets = [0, 1, 2, 3];
+
+  // تحديد اتجاه الحركة بناءً على المتغير
+  const velocityFactor = direction === "rtl" ? -1 : 1;
 
   useEffect(() => {
-    if (containerRef.current) {
-      // Calculate width of one set of items
-      setContainerWidth(containerRef.current.scrollWidth / 3);
-    }
-    
-    const handleResize = () => {
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.scrollWidth / 3);
+    const calculateWidth = () => {
+      if (contentRef.current) {
+        // نقيس عرض مجموعة واحدة فقط بدقة البكسل المتناهية
+        setContentWidth(contentRef.current.getBoundingClientRect().width);
       }
     };
+
+    calculateWidth();
+    window.addEventListener("resize", calculateWidth);
     
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    // تأمين إضافي: إعادة الحساب بعد تحميل الصور والخطوط
+    const timer = setTimeout(calculateWidth, 1000);
+
+    return () => {
+      window.removeEventListener("resize", calculateWidth);
+      clearTimeout(timer);
+    };
   }, [items]);
 
-  // Wrap the value between 0 and -containerWidth for seamless looping
+  // هنا السحر: عند وصول الشريط لحافة معينة، يلتف بشكل مخفي 100% بدون أي قفزة بصرية
   const x = useTransform(baseX, (v) => {
-    if (containerWidth === 0) return 0;
-    const modValue = v % containerWidth;
-    return modValue;
+    if (contentWidth === 0) return 0;
+    return wrap(-contentWidth, 0, v);
   });
 
   useAnimationFrame((t, delta) => {
-    if (containerWidth === 0) return;
-    
-    // Calculate movement based on time delta for consistent speed across refresh rates
-    let moveBy = baseVelocity * (delta / 16);
-    
-    // Adjust direction
-    if (direction === "ltr") {
-      baseX.set(baseX.get() + moveBy);
-    } else {
-      baseX.set(baseX.get() - moveBy);
-    }
+    if (contentWidth === 0) return;
+    // الحفاظ على سرعة موحدة بغض النظر عن معدل تحديث الشاشة (Refresh Rate)
+    const moveBy = baseVelocity * (delta / 16.6) * velocityFactor;
+    baseX.set(baseX.get() + moveBy);
   });
 
   return (
-    <div className="relative overflow-hidden py-2 touch-pan-y">
+    // السر الأكبر هنا هو إجبار الحاوية على (dir="ltr") لفصل رياضيات الحركة عن اتجاه الموقع العربي
+    <div className="relative overflow-hidden py-2 touch-pan-y" dir="ltr">
       <motion.div
-        ref={containerRef}
-        className="flex whitespace-nowrap will-change-transform"
+        className="flex whitespace-nowrap will-change-transform w-max cursor-grab active:cursor-grabbing"
         style={{ x }}
-        drag="x"
-        dragConstraints={{ left: -containerWidth * 2, right: containerWidth }}
-        onDrag={(e, info) => {
-          // Allow user to influence the position while dragging
+        // onPan يسمح بالسحب اليدوي بسلاسة تامة ويحدث القيمة الحركية دون كسر الدوران
+        onPan={(e, info) => {
           baseX.set(baseX.get() + info.delta.x);
         }}
       >
-        {tripledItems.map((partner, i) => (
-          <PartnerCard key={`${partner.id}-${i}`} partner={partner} />
+        {sets.map((setIndex) => (
+          <div 
+            key={setIndex} 
+            ref={setIndex === 0 ? contentRef : null} 
+            className="flex shrink-0 items-center"
+          >
+            {items.map((partner) => (
+              <PartnerCard key={`${setIndex}-${partner.id}`} partner={partner} />
+            ))}
+          </div>
         ))}
       </motion.div>
     </div>
@@ -139,7 +149,6 @@ function MarqueeRow({ items, baseVelocity = 1, direction = "rtl" }: MarqueeRowPr
 }
 
 export function PartnersMarquee() {
-  // Split into two distinct groups for visual variety
   const firstRow = useMemo(() => allPartners.slice(0, 15), []);
   const secondRow = useMemo(() => allPartners.slice(15, 30), []);
 
@@ -174,14 +183,14 @@ export function PartnersMarquee() {
       </div>
 
       <div className="relative space-y-4 sm:space-y-6">
-        {/* Edge Fading Gradients */}
+        {/* تدرجات الحواف للمسة فاخرة (Gradients) */}
         <div className="absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-[#0f0f0f] to-transparent z-20 pointer-events-none" />
         <div className="absolute inset-y-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-[#0f0f0f] to-transparent z-20 pointer-events-none" />
 
-        {/* First Row - Moves Right to Left (RTL context) */}
+        {/* الشريط الأول */}
         <MarqueeRow items={firstRow} baseVelocity={0.8} direction="rtl" />
 
-        {/* Second Row - Moves Left to Right */}
+        {/* الشريط الثاني */}
         <MarqueeRow items={secondRow} baseVelocity={0.6} direction="ltr" />
       </div>
       
