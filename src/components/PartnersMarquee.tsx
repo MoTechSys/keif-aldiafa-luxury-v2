@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useAnimationFrame, useMotionValue, useTransform } from "motion/react";
-import { useRef, useState, useEffect, useMemo } from "react";
+import { motion } from "motion/react";
+import { useRef, useEffect, useCallback, useMemo, useState } from "react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 // Partner logos (30 total)
@@ -38,28 +38,26 @@ const allPartners = [
   { id: 30, name: "Hamat Leading", logo: "/images/partners/30_Hamat_Leading.webp" },
 ];
 
-// دالة رياضية فائقة الدقة لضمان التفاف المسبحة (Seamless Wrap) بدون أي فراغات
-const wrap = (min: number, max: number, v: number) => {
-  const rangeSize = max - min;
-  return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
-};
-
+/* ─── Partner Card ─── */
 function PartnerCard({ partner }: { partner: (typeof allPartners)[0] }) {
   return (
-    <div className="flex-shrink-0 select-none px-2 sm:px-3" style={{ width: "clamp(110px, 25vw, 160px)" }}>
+    <div
+      className="marquee-item flex-shrink-0 select-none px-2 sm:px-3"
+      style={{ width: "clamp(120px, 22vw, 160px)" }}
+    >
       <div
-        className="relative h-16 sm:h-20 rounded-xl flex items-center justify-center transition-all duration-300 hover:border-[rgba(184,134,11,0.4)] group hover:scale-105"
+        className="relative h-16 sm:h-20 rounded-xl flex items-center justify-center transition-all duration-300 hover:border-[rgba(184,134,11,0.4)] group"
         style={{
           background: "rgba(20,16,6,0.4)",
           border: "1px solid rgba(184,134,11,0.12)",
           backdropFilter: "blur(8px)",
         }}
       >
-        <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center p-1.5 opacity-100 transition-opacity duration-300">
+        <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center p-1.5 group-hover:opacity-100 transition-opacity duration-300">
           <ImageWithFallback
             src={partner.logo}
             alt={partner.name}
-            className="w-full h-full object-contain brightness-110 contrast-110 transition-all duration-500 pointer-events-none"
+            className="w-full h-full object-contain brightness-110 contrast-110 group-hover:brightness-125 transition-all duration-500"
             loading="lazy"
             width={60}
             height={60}
@@ -71,89 +69,162 @@ function PartnerCard({ partner }: { partner: (typeof allPartners)[0] }) {
   );
 }
 
+/* ─────────────────────────────────────────────────────────
+   Infinite Seamless Marquee Row
+   
+   The "prayer beads" technique:
+   - Render items N times (enough to cover viewport + overflow)
+   - Use requestAnimationFrame for GPU-accelerated translate3d
+   - When the track moves exactly one "set width", snap back instantly
+   - The snap is invisible because the duplicate set looks identical
+   - Result: endless smooth scroll with ZERO gaps, ever.
+   ───────────────────────────────────────────────────────── */
+
 interface MarqueeRowProps {
   items: typeof allPartners;
-  baseVelocity: number;
-  direction?: "ltr" | "rtl";
+  /** Pixels per second */
+  speed?: number;
+  /** Visual direction: "left" = items flow leftward, "right" = items flow rightward */
+  direction?: "left" | "right";
 }
 
-function MarqueeRow({ items, baseVelocity = 1, direction = "rtl" }: MarqueeRowProps) {
-  const baseX = useMotionValue(0);
-  const [contentWidth, setContentWidth] = useState(0);
-  const contentRef = useRef<HTMLDivElement>(null);
+function MarqueeRow({ items, speed = 40, direction = "left" }: MarqueeRowProps) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const rafId = useRef<number>(0);
+  const offset = useRef(0);
+  const lastTime = useRef(0);
+  const isPaused = useRef(false);
+  const singleSetWidth = useRef(0);
+  const [ready, setReady] = useState(false);
 
-  // نستخدم 4 مجموعات (بدلاً من 3) لضمان عدم وجود أي فراغ مهما كانت شاشة المستخدم عملاقة أو تم سحب الشريط بقوة
-  const sets = [0, 1, 2, 3];
+  // Render items 4x to guarantee seamless coverage on ultra-wide screens
+  const repeatedItems = useMemo(
+    () => [...items, ...items, ...items, ...items],
+    [items]
+  );
 
-  // تحديد اتجاه الحركة بناءً على المتغير
-  const velocityFactor = direction === "rtl" ? -1 : 1;
+  /* ── Measure one complete set of items ── */
+  const measure = useCallback(() => {
+    if (!trackRef.current) return;
+    const allItems = trackRef.current.querySelectorAll(".marquee-item");
+    const perSet = items.length;
+    let w = 0;
+    for (let i = 0; i < perSet && i < allItems.length; i++) {
+      w += (allItems[i] as HTMLElement).offsetWidth;
+    }
+    singleSetWidth.current = w;
+
+    // For "right" direction, start at -singleSetWidth so items
+    // are pre-scrolled and there's content to the left of viewport
+    if (direction === "right" && offset.current === 0 && w > 0) {
+      offset.current = -w;
+    }
+
+    setReady(true);
+  }, [items.length, direction]);
 
   useEffect(() => {
-    const calculateWidth = () => {
-      if (contentRef.current) {
-        // نقيس عرض مجموعة واحدة فقط بدقة البكسل المتناهية
-        setContentWidth(contentRef.current.getBoundingClientRect().width);
-      }
-    };
-
-    calculateWidth();
-    window.addEventListener("resize", calculateWidth);
-    
-    // تأمين إضافي: إعادة الحساب بعد تحميل الصور والخطوط
-    const timer = setTimeout(calculateWidth, 1000);
-
+    // Wait a frame for layout to settle, then measure
+    const raf = requestAnimationFrame(() => measure());
+    const onResize = () => measure();
+    window.addEventListener("resize", onResize);
     return () => {
-      window.removeEventListener("resize", calculateWidth);
-      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
     };
-  }, [items]);
+  }, [measure]);
 
-  // هنا السحر: عند وصول الشريط لحافة معينة، يلتف بشكل مخفي 100% بدون أي قفزة بصرية
-  const x = useTransform(baseX, (v) => {
-    if (contentWidth === 0) return 0;
-    return wrap(-contentWidth, 0, v);
-  });
+  /* ── Core animation loop (requestAnimationFrame) ── */
+  useEffect(() => {
+    const animate = (now: number) => {
+      if (!lastTime.current) {
+        lastTime.current = now;
+      }
+      const delta = now - lastTime.current;
+      lastTime.current = now;
 
-  useAnimationFrame((t, delta) => {
-    if (contentWidth === 0) return;
-    // الحفاظ على سرعة موحدة بغض النظر عن معدل تحديث الشاشة (Refresh Rate)
-    const moveBy = baseVelocity * (delta / 16.6) * velocityFactor;
-    baseX.set(baseX.get() + moveBy);
-  });
+      const setW = singleSetWidth.current;
+
+      if (!isPaused.current && setW > 0 && trackRef.current) {
+        const moveBy = speed * (delta / 1000);
+
+        if (direction === "left") {
+          // Moving left: offset decreases
+          offset.current -= moveBy;
+          // Once we've moved past one full set, snap forward
+          if (offset.current <= -setW) {
+            offset.current += setW;
+          }
+        } else {
+          // Moving right: offset increases
+          offset.current += moveBy;
+          // Once we've moved past 0 (from starting at -setW), snap back
+          if (offset.current >= 0) {
+            offset.current -= setW;
+          }
+        }
+
+        trackRef.current.style.transform = `translate3d(${offset.current}px, 0, 0)`;
+      }
+
+      rafId.current = requestAnimationFrame(animate);
+    };
+
+    rafId.current = requestAnimationFrame(animate);
+    return () => {
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+    };
+  }, [speed, direction]);
+
+  /* ── Pause on hover / touch ── */
+  const handlePause = useCallback(() => {
+    isPaused.current = true;
+  }, []);
+
+  const handleResume = useCallback(() => {
+    isPaused.current = false;
+    lastTime.current = 0; // reset delta to prevent jump
+  }, []);
 
   return (
-    // السر الأكبر هنا هو إجبار الحاوية على (dir="ltr") لفصل رياضيات الحركة عن اتجاه الموقع العربي
-    <div className="relative overflow-hidden py-2 touch-pan-y" dir="ltr">
-      <motion.div
-        className="flex whitespace-nowrap will-change-transform w-max cursor-grab active:cursor-grabbing"
-        style={{ x }}
-        // onPan يسمح بالسحب اليدوي بسلاسة تامة ويحدث القيمة الحركية دون كسر الدوران
-        onPan={(e, info) => {
-          baseX.set(baseX.get() + info.delta.x);
-        }}
+    <div
+      ref={wrapperRef}
+      className="relative overflow-hidden py-2"
+      dir="ltr" /* Force LTR so translate direction is consistent */
+      onMouseEnter={handlePause}
+      onMouseLeave={handleResume}
+      onTouchStart={handlePause}
+      onTouchEnd={handleResume}
+      style={{ opacity: ready ? 1 : 0, transition: "opacity 0.3s ease" }}
+    >
+      <div
+        ref={trackRef}
+        className="flex will-change-transform"
+        style={{ transform: "translate3d(0px, 0, 0)" }}
       >
-        {sets.map((setIndex) => (
-          <div 
-            key={setIndex} 
-            ref={setIndex === 0 ? contentRef : null} 
-            className="flex shrink-0 items-center"
-          >
-            {items.map((partner) => (
-              <PartnerCard key={`${setIndex}-${partner.id}`} partner={partner} />
-            ))}
-          </div>
+        {repeatedItems.map((partner, i) => (
+          <PartnerCard
+            key={`${partner.id}-r${Math.floor(i / items.length)}-${i % items.length}`}
+            partner={partner}
+          />
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }
 
+/* ─── Main Partners Marquee Section ─── */
 export function PartnersMarquee() {
   const firstRow = useMemo(() => allPartners.slice(0, 15), []);
   const secondRow = useMemo(() => allPartners.slice(15, 30), []);
 
   return (
-    <section className="py-12 sm:py-16 px-4 overflow-hidden contain-paint bg-[#0f0f0f]">
+    <section
+      className="py-12 sm:py-16 px-4 overflow-hidden contain-paint bg-[#0f0f0f]"
+      aria-label="شركاء النجاح"
+    >
+      {/* Section Header */}
       <div className="max-w-7xl mx-auto mb-8 sm:mb-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -162,12 +233,19 @@ export function PartnersMarquee() {
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <p className="text-[#B8860B] mb-2 text-center" style={{ fontSize: "0.7rem", letterSpacing: "0.3em", fontWeight: 600 }}>
+          <p
+            className="text-[#B8860B] mb-2 text-center"
+            style={{ fontSize: "0.7rem", letterSpacing: "0.3em", fontWeight: 600 }}
+          >
             ✦ نثق بهم ويثقون بنا ✦
           </p>
           <h2
             className="text-[#F5F5DC] text-center font-amiri"
-            style={{ fontSize: "clamp(1.5rem, 4vw, 2.4rem)", fontWeight: 800, lineHeight: 1.2 }}
+            style={{
+              fontSize: "clamp(1.5rem, 4vw, 2.4rem)",
+              fontWeight: 800,
+              lineHeight: 1.2,
+            }}
           >
             شركاء النجاح
           </h2>
@@ -176,30 +254,33 @@ export function PartnersMarquee() {
             style={{
               width: 60,
               height: 2,
-              background: "linear-gradient(90deg, transparent, #B8860B 30%, #D4A017 60%, transparent)",
+              background:
+                "linear-gradient(90deg, transparent, #B8860B 30%, #D4A017 60%, transparent)",
             }}
           />
         </motion.div>
       </div>
 
+      {/* Marquee Rows */}
       <div className="relative space-y-4 sm:space-y-6">
-        {/* تدرجات الحواف للمسة فاخرة (Gradients) */}
+        {/* Fade edges for cinematic look */}
         <div className="absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-[#0f0f0f] to-transparent z-20 pointer-events-none" />
         <div className="absolute inset-y-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-[#0f0f0f] to-transparent z-20 pointer-events-none" />
 
-        {/* الشريط الأول */}
-        <MarqueeRow items={firstRow} baseVelocity={0.8} direction="rtl" />
+        {/* Row 1 — flows leftward */}
+        <MarqueeRow items={firstRow} speed={45} direction="left" />
 
-        {/* الشريط الثاني */}
-        <MarqueeRow items={secondRow} baseVelocity={0.6} direction="ltr" />
+        {/* Row 2 — flows rightward (opposite for visual contrast) */}
+        <MarqueeRow items={secondRow} speed={35} direction="right" />
       </div>
-      
-      <motion.p 
+
+      {/* Hint */}
+      <motion.p
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         className="text-[#F5F5DC]/30 text-[10px] sm:text-xs text-center mt-8 font-ibm-plex-arabic tracking-wide"
       >
-        يمكنك سحب الشريط يدوياً لاستكشاف المزيد من الشركاء
+        مرر الماوس فوق الشريط لإيقاف الحركة مؤقتاً
       </motion.p>
     </section>
   );
