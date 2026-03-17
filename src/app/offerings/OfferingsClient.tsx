@@ -221,11 +221,11 @@ export default function OfferingsClient() {
   const currentCategory = categories.find((c) => c.id === activeTab) || categories[0];
 
   return (
-    <main className="min-h-screen bg-[#0f0f0f] pt-24 pb-32">
+    <main className="min-h-screen bg-[#0f0f0f] pt-8 pb-32">
       <div className="container mx-auto px-4">
         <Breadcrumbs items={[{ label: "تقديماتنا", href: "/offerings" }]} />
 
-        <header className="mb-12 text-center">
+        <header className="mb-8 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
