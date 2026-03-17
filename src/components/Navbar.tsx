@@ -32,7 +32,12 @@ function useWhatsAppUrl() {
 
 export { navLinks, useWhatsAppUrl, WA_NUMBER };
 
-export default function Navbar() {
+interface NavbarProps {
+  deferredPrompt?: any;
+  setDeferredPrompt?: (prompt: any) => void;
+}
+
+export default function Navbar({ deferredPrompt, setDeferredPrompt }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrollDir, setScrollDir] = useState<"up" | "down">("up");
@@ -64,6 +69,21 @@ export default function Navbar() {
   const toggleMenu = useCallback(() => setMenuOpen((v) => !v), []);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const isActive = (href: string) => pathname === href;
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    
+    // Show the install prompt
+    deferredPrompt.prompt();
+    
+    // Wait for the user to respond to the prompt
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User response to the install prompt: ${outcome}`);
+    
+    // We've used the prompt, and can't use it again, throw it away
+    if (setDeferredPrompt) setDeferredPrompt(null);
+    closeMenu();
+  };
 
   return (
     <>
@@ -199,6 +219,31 @@ export default function Navbar() {
                       </Link>
                     </motion.div>
                   ))}
+
+                  {/* PWA Install Button in Menu */}
+                  {deferredPrompt && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }} 
+                      animate={{ opacity: 1, y: 0 }} 
+                      transition={{ delay: navLinks.length * 0.045 + 0.1 }}
+                      className="pt-4 mt-4 border-t border-[#B8860B]/10"
+                    >
+                      <button 
+                        onClick={handleInstallClick}
+                        className="flex items-center justify-center gap-3 w-full px-4 py-4 rounded-2xl text-[#0f0f0f] transition-all duration-300 shadow-lg"
+                        style={{ 
+                          background: "linear-gradient(135deg, #B8860B, #D4A017)",
+                          fontWeight: 800,
+                          fontSize: "1rem",
+                          boxShadow: "0 8px 25px rgba(184,134,11,0.3)"
+                        }}
+                      >
+                        <span className="text-xl">📲</span>
+                        <span>تثبيت التطبيق على الجوال</span>
+                      </button>
+                      <p className="text-center text-[#B8860B]/50 text-[10px] mt-3">ثبّت التطبيق للوصول السريع وتجربة ضيافة متكاملة</p>
+                    </motion.div>
+                  )}
                 </div>
               </div>
             </motion.nav>
