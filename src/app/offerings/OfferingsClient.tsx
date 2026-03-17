@@ -272,31 +272,35 @@ function StickyMicroNav({ activeTab, onTabChange }: { activeTab: string; onTabCh
 
               {/* Content Container */}
               <div className="relative flex flex-col items-center justify-center p-3 sm:p-4 h-full">
-                {/* Icon - Animated Visibility with Fluid Transition */}
+                {/* Icon - Animated Visibility with Staggered Transition */}
                 <motion.span
                   className="text-3xl sm:text-4xl overflow-hidden absolute"
                   animate={{
                     opacity: isSticky ? 0 : 1,
-                    scale: isSticky ? 0 : (activeTab === cat.id ? 1.2 : 1),
-                    y: isSticky ? -16 : 0,
+                    scale: isSticky ? 0.7 : (activeTab === cat.id ? 1.2 : 1),
+                    y: isSticky ? -20 : 0,
                     pointerEvents: isSticky ? 'none' : 'auto',
                     filter: activeTab === cat.id ? 'drop-shadow(0 0 8px rgba(184, 134, 11, 0.6))' : 'none',
                   }}
-                  transition={{ type: 'spring', stiffness: 280, damping: 20, mass: 0.8 }}
+                  transition={{ type: 'spring', stiffness: 280, damping: 20, mass: 0.8, delay: 0 }}
                   layout
                 >
                   {cat.icon}
                 </motion.span>
 
-                {/* Label - Fluid Transition */}
+                {/* Label - Fluid Transition with Text Shadow */}
                 <motion.p
                   className="text-[10px] sm:text-xs text-center font-medium leading-tight relative"
+                  style={{
+                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.6), 0 0 12px rgba(184, 134, 11, 0.3)',
+                  }}
                   animate={{
                     color: activeTab === cat.id ? '#D4A017' : '#F5F5DC',
                     opacity: activeTab === cat.id ? 1 : 0.6,
                     fontSize: isSticky ? '0.7rem' : '0.75rem',
+                    y: isSticky ? 0 : 0,
                   }}
-                  transition={{ type: 'spring', stiffness: 280, damping: 20, mass: 0.8 }}
+                  transition={{ type: 'spring', stiffness: 280, damping: 20, mass: 0.8, delay: 0.05 }}
                   layout
                 >
                   {cat.label}
