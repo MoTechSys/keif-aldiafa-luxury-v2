@@ -297,39 +297,31 @@ export default function PortfolioClient() {
 
       {/* Gallery Grid */}
       <div className="container mx-auto px-4 pt-12">
-        <AnimatePresence mode="popLayout">
-          <motion.div
-            key={activeFilter}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
-          >
-            {displayedItems.map((item, idx) => (
-              <div
-                key={item.id}
-                onClick={() => setSelectedIndex(idx)}
-                className="group relative rounded-2xl overflow-hidden cursor-pointer aspect-square"
-              >
-                <ImageWithFallback
-                  src={item.image}
-                  alt={`صورة ${idx + 1}`}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 img-overlay" />
-                <div className="absolute inset-0 bg-[#B8860B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-black/50 backdrop-blur-md border border-[#B8860B]/30">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#D4A017" strokeWidth="2" className="w-5 h-5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                    </svg>
-                  </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          {displayedItems.map((item, idx) => (
+            <div
+              key={item.id}
+              onClick={() => setSelectedIndex(idx)}
+              className="group relative rounded-2xl overflow-hidden cursor-pointer aspect-square"
+            >
+              <ImageWithFallback
+                src={item.image}
+                alt={`صورة ${idx + 1}`}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 img-overlay" />
+              <div className="absolute inset-0 bg-[#B8860B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-black/50 backdrop-blur-md border border-[#B8860B]/30">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#D4A017" strokeWidth="2" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                  </svg>
                 </div>
               </div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
+            </div>
+          ))}
+        </div>
 
         {/* Load More Button */}
         {hasMore && (

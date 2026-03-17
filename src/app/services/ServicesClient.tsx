@@ -339,15 +339,11 @@ export default function ServicesClient() {
       {/* SERVICES GRID */}
       <section className="px-4 pb-20">
         <div className="max-w-7xl mx-auto">
-          <AnimatePresence mode="wait">
-            <motion.div key={activeTab} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }}>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[300px] sm:auto-rows-[350px] lg:auto-rows-[400px]">
-                {currentCategory.services.map((service, i) => (
-                  <ServiceCard key={service.id} service={service} onClick={() => setSelectedService(service)} index={i} />
-                ))}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[300px] sm:auto-rows-[350px] lg:auto-rows-[400px]">
+            {currentCategory.services.map((service, i) => (
+              <ServiceCard key={service.id} service={service} onClick={() => setSelectedService(service)} index={i} />
+            ))}
+          </div>
 
           {/* CTA */}
           <div className="mt-16 text-center p-8 sm:p-12 rounded-3xl relative overflow-hidden" style={{ background: "linear-gradient(135deg, rgba(25,20,8,0.9), rgba(15,12,5,0.95))", border: "1px solid rgba(184,134,11,0.2)" }}>

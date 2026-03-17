@@ -342,46 +342,36 @@ export default function OfferingsClient() {
 
       {/* Content Grid */}
       <div className="container mx-auto px-4 pt-12">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
-          >
-            {/* Category Header */}
-            <div className="mb-10 text-center">
-              <p className="text-[#B8860B] text-sm mb-2" style={{ letterSpacing: "0.1em" }}>✦ {currentCategory.label} ✦</p>
-              <p className="text-[#F5F5DC]/60 text-sm sm:text-base max-w-lg mx-auto">{currentCategory.description}</p>
-            </div>
+        {/* Category Header */}
+        <div className="mb-10 text-center">
+          <p className="text-[#B8860B] text-sm mb-2" style={{ letterSpacing: "0.1em" }}>✦ {currentCategory.label} ✦</p>
+          <p className="text-[#F5F5DC]/60 text-sm sm:text-base max-w-lg mx-auto">{currentCategory.description}</p>
+        </div>
 
-            {/* Items Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-              {currentCategory.items.map((item, idx) => (
-                <div
-                  key={item.name}
-                  onClick={() => setLightbox({ items: currentCategory.items, index: idx })}
-                  className="group relative rounded-2xl overflow-hidden cursor-pointer aspect-[4/5]"
-                >
-                  <ImageWithFallback
-                    src={item.img}
-                    alt={item.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 img-overlay" />
-                  <div className="absolute inset-0 bg-[#B8860B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  
-                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
-                    <h3 className="text-[#F5F5DC]" style={{ fontSize: "1.1rem", fontWeight: 700 }}>{item.name}</h3>
-                    <p className="text-[#F5F5DC]/50 text-xs mt-1 line-clamp-2">{item.description}</p>
-                  </div>
-                </div>
-              ))}
+        {/* Items Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          {currentCategory.items.map((item, idx) => (
+            <div
+              key={item.name}
+              onClick={() => setLightbox({ items: currentCategory.items, index: idx })}
+              className="group relative rounded-2xl overflow-hidden cursor-pointer aspect-[4/5]"
+            >
+              <ImageWithFallback
+                src={item.img}
+                alt={item.name}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 img-overlay" />
+              <div className="absolute inset-0 bg-[#B8860B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+                <h3 className="text-[#F5F5DC]" style={{ fontSize: "1.1rem", fontWeight: 700 }}>{item.name}</h3>
+                <p className="text-[#F5F5DC]/50 text-xs mt-1 line-clamp-2">{item.description}</p>
+              </div>
             </div>
-          </motion.div>
-        </AnimatePresence>
+          ))}
+        </div>
       </div>
 
       {/* Lightbox */}
