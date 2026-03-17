@@ -8,9 +8,11 @@ import {
   SERVICE_IMAGES,
   OUTFIT_IMAGES,
   SERVICES_MALE,
-  SERVICES_FEMALE,
   SERVICES_FEMALE_EXTENDED,
   SERVICES_ARTISTIC,
+  SAFARJIA_IMAGES,
+  SAWAS_IMAGES,
+  FEMALE_SERVICES_IMAGES,
 } from "@/lib/images";
 
 const WA = "966508252134";
@@ -25,8 +27,8 @@ const categories: ServiceCategory[] = [
     services: [
       { id: "hosts", title: "مضيفون", subtitle: "Male Hosts", img: SERVICE_IMAGES.maleWaiter, description: "مضيفون محترفون مدربون على أعلى معايير الضيافة الدولية والأصالة العربية.", features: ["زي رسمي أنيق", "خبرة +5 سنوات", "لغات متعددة", "بروتوكول VIP"], outfits: [{ name: "حزام", img: OUTFIT_IMAGES.hizam, desc: "زي رسمي بحزام أنيق" }, { name: "دقلة", img: OUTFIT_IMAGES.dagla, desc: "دقلة سعودية أصيلة" }, { name: "دقلة وجنبية", img: OUTFIT_IMAGES.daglaJanbiya, desc: "دقلة مع جنبية تراثية" }, { name: "سديرية", img: OUTFIT_IMAGES.sideriya, desc: "سديرية أنيقة" }, { name: "مكاوي", img: OUTFIT_IMAGES.makkawi, desc: "زي مكاوي تراثي" }] },
       { id: "zamzam", title: "سقّاء زمزم", subtitle: "Zamzam Server", img: SERVICE_IMAGES.zamzam, description: "سقاء زمزم بأسلوب تراثي فاخر يعكس أصالة الضيافة السعودية.", features: ["زي تراثي أصيل", "إبريق نحاسي فاخر", "خدمة شخصية", "تقديم فوري"], outfits: [{ name: "زي السقّاء التراثي", img: OUTFIT_IMAGES.safarjia, desc: "زي تراثي أصيل" }] },
-      { id: "safarjia", title: "صبّاح قهوة / سفرجي", subtitle: "Coffee Butler", img: SERVICE_IMAGES.butler, description: "صبّاح قهوة محترف يقدم القهوة السعودية الأصيلة بأسلوب يليق بضيوفكم.", features: ["قهوة سعودية طازجة", "دلال نحاسية أصيلة", "تمر وحلويات", "خدمة مستمرة"], outfits: [{ name: "ثوب سعودي مع بشت", img: OUTFIT_IMAGES.safarjia, desc: "زي تقليدي فاخر" }] },
-      { id: "sawas", title: "سوّاس", subtitle: "Valet Service", img: SERVICE_IMAGES.sawas, description: "خدمة صف السيارات بأعلى معايير الاحترافية والأمان.", features: ["خدمة سريعة", "تأمين شامل", "فريق مدرب", "تنظيم المواقف"], outfits: [{ name: "بدلة رسمية", img: OUTFIT_IMAGES.sawas, desc: "بدلة رسمية أنيقة" }] },
+      { id: "safarjia", title: "صبّاح قهوة / سفرجي", subtitle: "Coffee Butler", img: SAFARJIA_IMAGES.mainBg, description: "صبّاح قهوة محترف يقدم القهوة السعودية الأصيلة بأسلوب يليق بضيوفكم، مع تقديم فاخر وخدمة استثنائية.", features: ["قهوة سعودية طازجة", "دلال نحاسية أصيلة", "تمر وحلويات فاخرة", "خدمة مستمرة"], outfits: [{ name: "زي صبّاح قهوة - 1", img: SAFARJIA_IMAGES.safarji1, desc: "زي تقليدي فاخر مع دلال نحاسية" }, { name: "زي صبّاح قهوة - 2", img: SAFARJIA_IMAGES.safarji2, desc: "ثوب سعودي أصيل مع بشت فاخر" }, { name: "زي صبّاح قهوة - 3", img: SAFARJIA_IMAGES.safarji3, desc: "ملابس تراثية بتصميم راقٍ" }, { name: "زي صبّاح قهوة - 4", img: SAFARJIA_IMAGES.safarji4, desc: "زي فاخر للمناسبات الخاصة" }] },
+      { id: "sawas", title: "سوّاس", subtitle: "Valet Service", img: SAWAS_IMAGES.mainBg, description: "خدمة صف السيارات بأعلى معايير الاحترافية والأمان، مع تقديم خدمات إضافية فاخرة.", features: ["خدمة سريعة واحترافية", "تأمين شامل للسيارات", "فريق مدرب متخصص", "تنظيم مواقف احترافي"], outfits: [{ name: "زي سوّاس - عامل شاي", img: SAWAS_IMAGES.teaWorker, desc: "عامل شاي بزي رسمي أنيق" }, { name: "زي سوّاس - مصباح ذهبي", img: SAWAS_IMAGES.goldenLamp, desc: "خدمة إضاءة فاخرة مع زي مميز" }, { name: "زي سوّاس - بائع عصير", img: SAWAS_IMAGES.juiceSeller, desc: "خدمة عصائر طازجة مع تقديم فاخر" }, { name: "زي سوّاس - شجرة ذهبية", img: SAWAS_IMAGES.goldenTree, desc: "ديكور فاخر مع خدمة متميزة" }] },
     ],
   },
   {
@@ -36,24 +38,28 @@ const categories: ServiceCategory[] = [
         id: "hostesses",
         title: "مضيفات",
         subtitle: "Female Hosts",
-        img: SERVICES_FEMALE_EXTENDED.hostesses[0],
-        description: "مضيفات محترفات بمظهر راقٍ وخدمة استثنائية لمناسباتكم النسائية.",
+        img: FEMALE_SERVICES_IMAGES.mainBg,
+        description: "مضيفات محترفات بمظهر راقٍ وخدمة استثنائية لمناسباتكم النسائية، مع تدريب عالي المستوى.",
         features: ["مظهر أنيق وراقٍ", "خدمة احترافية", "تنسيق المناسبات", "استقبال VIP"],
         outfits: [
-          { name: "عباءة فاخرة - 1", img: SERVICES_FEMALE_EXTENDED.hostesses[0], desc: "عباءة مصممة خصيصاً" },
-          { name: "عباءة فاخرة - 2", img: SERVICES_FEMALE_EXTENDED.hostesses[1], desc: "عباءة راقية بتصميم مميز" },
+          { name: "عباءة فاخرة - 1", img: FEMALE_SERVICES_IMAGES.female1, desc: "عباءة مصممة خصيصاً بأناقة فائقة" },
+          { name: "عباءة فاخرة - 2", img: FEMALE_SERVICES_IMAGES.female2, desc: "عباءة راقية بتصميم مميز" },
+          { name: "عباءة فاخرة - 3", img: FEMALE_SERVICES_IMAGES.female3, desc: "زي فاخر للمناسبات الراقية" },
+          { name: "عباءة فاخرة - 4", img: FEMALE_SERVICES_IMAGES.female4, desc: "تصميم حديث مع لمسة تراثية" },
         ],
       },
       {
         id: "safarjiat",
         title: "سفرجيات",
         subtitle: "Female Butlers",
-        img: SERVICES_FEMALE_EXTENDED.safarjiat[0],
+        img: FEMALE_SERVICES_IMAGES.female5,
         description: "سفرجيات محترفات يقدمن القهوة السعودية والشاي والتمر بأسلوب راقٍ للمناسبات النسائية.",
         features: ["قهوة سعودية طازجة", "دلال فاخرة", "تمر وحلويات", "خدمة متواصلة"],
         outfits: [
-          { name: "زي سفرجية - 1", img: SERVICES_FEMALE_EXTENDED.safarjiat[0], desc: "زي أنيق خاص بالسفرجيات" },
-          { name: "زي سفرجية - 2", img: SERVICES_FEMALE_EXTENDED.safarjiat[1], desc: "زي رسمي فاخر" },
+          { name: "زي سفرجية - 1", img: FEMALE_SERVICES_IMAGES.female5, desc: "زي أنيق خاص بالسفرجيات" },
+          { name: "زي سفرجية - 2", img: FEMALE_SERVICES_IMAGES.female6, desc: "زي رسمي فاخر" },
+          { name: "زي سفرجية - 3", img: FEMALE_SERVICES_IMAGES.female7, desc: "ملابس تراثية راقية" },
+          { name: "زي سفرجية - 4", img: FEMALE_SERVICES_IMAGES.female8, desc: "تصميم حديث فاخر" },
         ],
       },
       {
@@ -170,12 +176,16 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
                 {service.outfits.map((o, i) => (
                   <button key={i} onClick={() => setSelectedOutfit(i)} className="flex-shrink-0 w-16 md:w-20 rounded-lg md:rounded-xl overflow-hidden transition-all duration-300 group" style={{ border: selectedOutfit === i ? "1.5px solid #B8860B" : "1.5px solid rgba(184,134,11,0.1)", opacity: selectedOutfit === i ? 1 : 0.5 }}>
                     <ImageWithFallback src={o.img} alt={o.name} className="w-full h-12 md:h-16 object-cover group-hover:scale-110 transition-transform duration-500" />
-                    <p className="text-center text-[8px] md:text-[10px] py-0.5 md:py-1 text-[#F5F5DC]/60 bg-black/40">{o.name}</p>
+                    <p className="text-center text-[8px] md:text-[10px] py-0.5 md:py-1 text-[#F5F5DC]/60 line-clamp-1">{o.name}</p>
                   </button>
                 ))}
               </div>
             </div>
           )}
+
+          <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`مرحباً، أود الاستفسار عن خدمة ${service.title}`)}`} target="_blank" rel="noopener noreferrer" className="mt-6 md:mt-8 w-full py-3 rounded-xl text-center text-white text-sm font-bold transition-all duration-300 hover:shadow-lg" style={{ background: "linear-gradient(135deg, #1da851, #25D366)", boxShadow: "0 4px 15px rgba(37,211,102,0.3)" }}>
+            استفسر عن هذه الخدمة
+          </a>
         </div>
       </motion.div>
     </motion.div>

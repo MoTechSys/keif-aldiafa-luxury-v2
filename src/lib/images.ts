@@ -134,6 +134,43 @@ export const WEDDING_IMAGES = Array.from({ length: 18 }, (_, i) => `/images/wedd
 export const DISTRIBUTION_IMAGES = Array.from({ length: 5 }, (_, i) => `/images/distributions/dist-${i + 1}.webp`);
 
 // ═══════════════════════════════════════════════════════════════
+// SERVICES — SAFARJIA
+// ═══════════════════════════════════════════════════════════════
+export const SAFARJIA_IMAGES = {
+  mainBg: "/images/services/safarjia/safarjia-main-bg.webp",
+  safarji1: "/images/services/safarjia/safarji-1.webp",
+  safarji2: "/images/services/safarjia/safarji-2.webp",
+  safarji3: "/images/services/safarjia/safarji-3.webp",
+  safarji4: "/images/services/safarjia/safarji-4.webp",
+};
+
+// ═══════════════════════════════════════════════════════════════
+// SERVICES — SAWAS
+// ═══════════════════════════════════════════════════════════════
+export const SAWAS_IMAGES = {
+  mainBg: "/images/services/sawas/sawas-main-bg.webp",
+  teaWorker: "/images/services/sawas/sawas-tea-worker.webp",
+  goldenLamp: "/images/services/sawas/sawas-golden-lamp.webp",
+  juiceSeller: "/images/services/sawas/sawas-juice-seller.webp",
+  goldenTree: "/images/services/sawas/sawas-golden-tree.webp",
+};
+
+// ═══════════════════════════════════════════════════════════════
+// SERVICES — FEMALE SERVICES
+// ═══════════════════════════════════════════════════════════════
+export const FEMALE_SERVICES_IMAGES = {
+  mainBg: "/images/services/female-services/female-main-bg.webp",
+  female1: "/images/services/female-services/female-1.webp",
+  female2: "/images/services/female-services/female-2.webp",
+  female3: "/images/services/female-services/female-3.webp",
+  female4: "/images/services/female-services/female-4.webp",
+  female5: "/images/services/female-services/female-5.webp",
+  female6: "/images/services/female-services/female-6.webp",
+  female7: "/images/services/female-services/female-7.webp",
+  female8: "/images/services/female-services/female-8.webp",
+};
+
+// ═══════════════════════════════════════════════════════════════
 // SERVICES — MALE
 // ═══════════════════════════════════════════════════════════════
 export const SERVICES_MALE = {
@@ -154,7 +191,7 @@ export const SERVICES_MALE = {
 // ═══════════════════════════════════════════════════════════════
 // SERVICES — FEMALE
 // ═══════════════════════════════════════════════════════════════
-export const SERVICES_FEMALE = Array.from({ length: 2 }, (_, i) => `/images/services/female/female-${i + 1}.webp`);
+
 
 export const SERVICES_FEMALE_EXTENDED = {
   hostesses: Array.from({ length: 2 }, (_, i) => `/images/services/female/hostesses/hostess-${i + 1}.webp`),
@@ -244,8 +281,8 @@ export const SERVICE_IMAGES = {
   maleWaiter: SERVICES_MALE.hosts.main,
   zamzam: SERVICES_MALE.safarjia[1],
   butler: SERVICES_MALE.safarjia[2],
-  sawas: SERVICES_MALE.sawas[0],
-  hostess: SERVICES_FEMALE[0],
+  sawas: SAWAS_IMAGES.mainBg,
+  hostess: FEMALE_SERVICES_IMAGES.mainBg,
   calligrapher: SERVICES_ARTISTIC.artist[0],
   artist: SERVICES_ARTISTIC.artist[1],
   folkband: SERVICES_ARTISTIC.folkband[0],
@@ -266,7 +303,7 @@ export const OUTFIT_IMAGES = {
   sideriya: SERVICES_MALE.hosts.sideriya[0],
   makkawi: SERVICES_MALE.hosts.makkawi[0],
   souqiya: SERVICES_MALE.souqiya[0],
-  female: SERVICES_FEMALE[0],
-  safarjia: SERVICES_MALE.safarjia[0],
-  sawas: SERVICES_MALE.sawas[0],
+  female: FEMALE_SERVICES_IMAGES.mainBg,
+  safarjia: SAFARJIA_IMAGES.mainBg,
+  sawas: SAWAS_IMAGES.mainBg,
 };
