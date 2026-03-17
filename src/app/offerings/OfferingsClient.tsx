@@ -324,31 +324,15 @@ export default function OfferingsClient() {
           <Breadcrumbs items={[{ label: "تقديماتنا", href: "/offerings" }]} />
 
           <header className="mb-8 text-center">
-            <motion.p 
-              initial={{ opacity: 0, y: -10 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              className="text-[#B8860B] mb-3" 
-              style={{ fontSize: "0.75rem", letterSpacing: "0.35em" }}
-            >
+            <p className="text-[#B8860B] mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.35em" }}>
               ✦ تقديماتنا ✦
-            </motion.p>
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-[#F5F5DC] mb-4 font-tajawal"
-              style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", fontWeight: 900, lineHeight: 1.15}}
-            >
+            </p>
+            <h1 className="text-[#F5F5DC] mb-4 font-tajawal" style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", fontWeight: 900, lineHeight: 1.15}}>
               تشكيلة فاخرة من<br /><span className="gold-gradient-text">الضيافة الأصيلة</span>
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-[#F5F5DC]/55 max-w-xl mx-auto text-sm leading-relaxed"
-            >
+            </h1>
+            <p className="text-[#F5F5DC]/55 max-w-xl mx-auto text-sm leading-relaxed">
               نقدم لكم تشكيلة مختارة من أجود المشروبات والتمور والحلويات التي تعكس كرم الضيافة السعودية الأصيلة.
-            </motion.p>
+            </p>
           </header>
         </div>
 
@@ -375,12 +359,8 @@ export default function OfferingsClient() {
             {/* Items Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               {currentCategory.items.map((item, idx) => (
-                <motion.div
+                <div
                   key={item.name}
-                  initial={{ opacity: 0, y: 32 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ delay: idx * 0.05, duration: 0.5 }}
                   onClick={() => setLightbox({ items: currentCategory.items, index: idx })}
                   className="group relative rounded-2xl overflow-hidden cursor-pointer aspect-[4/5]"
                 >
@@ -397,7 +377,7 @@ export default function OfferingsClient() {
                     <h3 className="text-[#F5F5DC]" style={{ fontSize: "1.1rem", fontWeight: 700 }}>{item.name}</h3>
                     <p className="text-[#F5F5DC]/50 text-xs mt-1 line-clamp-2">{item.description}</p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </motion.div>
