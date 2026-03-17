@@ -48,22 +48,22 @@ function PartnerCard({ partner }: { partner: (typeof allPartners)[0] }) {
   return (
     <div className="flex-shrink-0 select-none px-2 sm:px-3" style={{ width: "clamp(110px, 25vw, 160px)" }}>
       <div
-        className="relative h-16 sm:h-20 rounded-xl flex items-center justify-center transition-all duration-300 hover:border-[rgba(184,134,11,0.4)] group hover:scale-105"
+        className="relative h-16 sm:h-20 rounded-xl flex items-center justify-center transition-all duration-300 hover:border-[rgba(184,134,11,0.4)] group hover:scale-105 overflow-hidden"
         style={{
           background: "rgba(20,16,6,0.4)",
           border: "1px solid rgba(184,134,11,0.12)",
           backdropFilter: "blur(8px)",
         }}
       >
-        <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center p-1.5 opacity-100 transition-opacity duration-300">
+        <div className="w-full h-full flex items-center justify-center opacity-100 transition-opacity duration-300">
           <ImageWithFallback
             src={partner.logo}
             alt={partner.name}
-            className="w-full h-full object-contain brightness-110 contrast-110 transition-all duration-500 pointer-events-none"
+            className="w-full h-full object-cover brightness-110 contrast-110 transition-all duration-500 pointer-events-none"
             loading="lazy"
-            width={60}
-            height={60}
-            quality={80}
+            width={160}
+            height={80}
+            quality={85}
           />
         </div>
       </div>
