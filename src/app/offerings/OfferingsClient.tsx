@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "motion/react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform, animate, useScroll } from "motion/react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import {
@@ -212,33 +212,98 @@ function Lightbox({
 }
 
 // ─────────────────────────────────────────────
-// Smart Micro-Grid Navigation Component
+// Royal Trio Sticky Navigation Component (Enhanced for Offerings)
 // ─────────────────────────────────────────────
-function StickyMicroNav({ activeTab, onTabChange }: { activeTab: string; onTabChange: (id: string) => void }) {
+function RoyalTrioNav({ activeTab, onTabChange }: { activeTab: string; onTabChange: (id: string) => void }) {
+  const [isSticky, setIsSticky] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+
+  useEffect(() => {
+    const unsubscribe = scrollY.onChange((latest) => {
+      if (containerRef.current) {
+        const containerTop = containerRef.current.getBoundingClientRect().top;
+        setIsSticky(containerTop <= 0);
+      }
+    });
+    return () => unsubscribe();
+  }, [scrollY]);
+
   return (
-    <div className="w-full container mx-auto px-4 mb-8">
-      <div className="grid grid-cols-5 gap-3">
-        {categories.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => onTabChange(cat.id)}
-            className={`relative group p-3 rounded-2xl transition-all duration-300 flex flex-col items-center justify-center h-full ${
-              activeTab === cat.id
-                ? 'bg-[rgba(184,134,11,0.2)] border-[1.5px] border-[rgba(184,134,11,0.6)] shadow-[0_0_20px_rgba(184,134,11,0.3)]'
-                : 'bg-[rgba(0,0,0,0.3)] border-[1px] border-[rgba(184,134,11,0.1)]'
-            }`}
-          >
-            <span className="text-3xl sm:text-4xl flex-shrink-0 mb-1">{cat.icon}</span>
-            <p className="text-[10px] sm:text-xs text-center font-semibold leading-tight flex-shrink-0"
-               style={{ textShadow: '0 3px 10px rgba(0, 0, 0, 0.8), 0 0 16px rgba(184, 134, 11, 0.4), 0 1px 3px rgba(0, 0, 0, 0.5)' }}>
-              {cat.label}
-            </p>
-            {activeTab === cat.id && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#B8860B] to-[#D4A017] rounded-b-2xl" />
-            )}
-          </button>
-        ))}
-      </div>
+    <div ref={containerRef} className="w-full">
+      <motion.section
+        ref={navRef}
+        className={`w-full transition-all duration-300 ${isSticky ? 'fixed top-0 left-0 right-0 z-50' : 'relative'}`}
+        animate={{
+          paddingTop: isSticky ? '12px' : '16px',
+          paddingBottom: isSticky ? '12px' : '16px',
+          background: isSticky ? 'rgba(15, 15, 15, 0.95)' : 'transparent',
+          backdropFilter: isSticky ? 'blur(16px)' : 'none',
+          borderBottom: isSticky ? '1px solid rgba(184, 134, 11, 0.15)' : 'none',
+        }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-center gap-2 sm:gap-3">
+            {categories.map((cat) => (
+              <motion.button
+                key={cat.id}
+                onClick={() => onTabChange(cat.id)}
+                className="relative group flex-1 max-w-sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {/* Background with Glassmorphism */}
+                <motion.div
+                  className="absolute inset-0 rounded-3xl transition-all duration-300"
+                  animate={{
+                    background: activeTab === cat.id
+                      ? 'linear-gradient(135deg, rgba(184, 134, 11, 0.25), rgba(212, 160, 23, 0.15))'
+                      : 'rgba(0, 0, 0, 0.25)',
+                    border: activeTab === cat.id
+                      ? '2px solid rgba(184, 134, 11, 0.7)'
+                      : '1.5px solid rgba(184, 134, 11, 0.15)',
+                    boxShadow: activeTab === cat.id
+                      ? '0 0 30px rgba(184, 134, 11, 0.4), inset 0 0 20px rgba(184, 134, 11, 0.1)'
+                      : 'none',
+                  }}
+                />
+
+                {/* Content Container */}
+                <div className="relative flex flex-col items-center justify-center p-2 sm:p-3 h-full min-h-[50px] sm:min-h-[60px]">
+                  {/* Label Only - Text-based Design with Text Shadow */}
+                  <motion.p
+                    className="text-[9px] sm:text-[10px] text-center font-medium leading-tight"
+                    style={{
+                      textShadow: '0 1px 4px rgba(0, 0, 0, 0.5), 0 0 8px rgba(184, 134, 11, 0.2)',
+                    }}
+                    animate={{
+                      color: activeTab === cat.id ? '#D4A017' : '#F5F5DC',
+                      opacity: activeTab === cat.id ? 1 : 0.65,
+                      fontSize: isSticky ? '0.65rem' : '0.7rem',
+                    }}
+                    transition={{ type: 'spring', stiffness: 280, damping: 20, mass: 0.8, delay: 0.05 }}
+                    layout
+                  >
+                    {cat.label}
+                  </motion.p>
+                </div>
+
+                {/* Active Indicator Line */}
+                {activeTab === cat.id && (
+                  <motion.div
+                    layoutId="activeIndicator"
+                    className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#B8860B] via-[#D4A017] to-[#B8860B]"
+                    style={{ borderRadius: '2px' }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  />
+                )}
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </motion.section>
     </div>
   );
 }
@@ -259,30 +324,40 @@ export default function OfferingsClient() {
           <Breadcrumbs items={[{ label: "تقديماتنا", href: "/offerings" }]} />
 
           <header className="mb-8 text-center">
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-5xl font-amiri text-[#D4A017] mb-4"
+            <motion.p 
+              initial={{ opacity: 0, y: -10 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              className="text-[#B8860B] mb-3" 
+              style={{ fontSize: "0.75rem", letterSpacing: "0.35em" }}
             >
-              تقديماتنا الفاخرة
+              ✦ تقديماتنا ✦
+            </motion.p>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-[#F5F5DC] mb-4 font-tajawal"
+              style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", fontWeight: 900, lineHeight: 1.15}}
+            >
+              تشكيلة فاخرة من<br /><span className="gold-gradient-text">الضيافة الأصيلة</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-[#F5F5DC]/70 max-w-2xl mx-auto text-sm sm:text-base"
+              transition={{ delay: 0.2 }}
+              className="text-[#F5F5DC]/55 max-w-xl mx-auto text-sm leading-relaxed"
             >
               نقدم لكم تشكيلة مختارة من أجود المشروبات والتمور والحلويات التي تعكس كرم الضيافة السعودية الأصيلة.
             </motion.p>
           </header>
         </div>
 
-        {/* Sticky Micro-Grid Navigation */}
-        <StickyMicroNav activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* Royal Trio Sticky Navigation */}
+        <RoyalTrioNav activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
 
       {/* Content Grid */}
-      <div className="container mx-auto px-4 pt-8">
+      <div className="container mx-auto px-4 pt-12">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -291,32 +366,36 @@ export default function OfferingsClient() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}
           >
-            {/* Category Description */}
-            <div className="mb-8 text-center">
+            {/* Category Header */}
+            <div className="mb-10 text-center">
               <p className="text-[#B8860B] text-sm mb-2" style={{ letterSpacing: "0.1em" }}>✦ {currentCategory.label} ✦</p>
-              <p className="text-[#F5F5DC]/60 text-sm sm:text-base">{currentCategory.description}</p>
+              <p className="text-[#F5F5DC]/60 text-sm sm:text-base max-w-lg mx-auto">{currentCategory.description}</p>
             </div>
 
             {/* Items Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               {currentCategory.items.map((item, idx) => (
                 <motion.div
                   key={item.name}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: idx * 0.05 }}
+                  initial={{ opacity: 0, y: 32 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ delay: idx * 0.05, duration: 0.5 }}
                   onClick={() => setLightbox({ items: currentCategory.items, index: idx })}
-                  className="group relative rounded-xl overflow-hidden cursor-pointer aspect-square"
+                  className="group relative rounded-2xl overflow-hidden cursor-pointer aspect-[4/5]"
                 >
                   <ImageWithFallback
                     src={item.img}
                     alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-end p-3">
-                    <p className="text-[#D4A017] text-xs sm:text-sm font-semibold text-center">{item.name}</p>
-                    <p className="text-[#F5F5DC]/70 text-[10px] sm:text-xs text-center mt-1 line-clamp-2">{item.description}</p>
+                  <div className="absolute inset-0 img-overlay" />
+                  <div className="absolute inset-0 bg-[#B8860B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+                    <h3 className="text-[#F5F5DC]" style={{ fontSize: "1.1rem", fontWeight: 700 }}>{item.name}</h3>
+                    <p className="text-[#F5F5DC]/50 text-xs mt-1 line-clamp-2">{item.description}</p>
                   </div>
                 </motion.div>
               ))}
