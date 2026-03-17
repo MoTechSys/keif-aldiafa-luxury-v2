@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll } from "motion/react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import {
@@ -189,6 +189,112 @@ function ServiceModal({ service, onClose }: { service: ServiceItem; onClose: () 
   );
 }
 
+// Royal Trio Sticky Navigation Component
+function RoyalTrioNav({ activeTab, onTabChange }: { activeTab: number; onTabChange: (index: number) => void }) {
+  const [isSticky, setIsSticky] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+
+  useEffect(() => {
+    const unsubscribe = scrollY.onChange((latest) => {
+      if (containerRef.current) {
+        const containerTop = containerRef.current.getBoundingClientRect().top;
+        setIsSticky(containerTop <= 0);
+      }
+    });
+    return () => unsubscribe();
+  }, [scrollY]);
+
+  return (
+    <div ref={containerRef} className="w-full">
+      <motion.section
+        ref={navRef}
+        className={`w-full transition-all duration-300 ${isSticky ? 'fixed top-0 left-0 right-0 z-50' : 'relative'}`}
+        animate={{
+          paddingTop: isSticky ? '16px' : '32px',
+          paddingBottom: isSticky ? '16px' : '32px',
+          background: isSticky ? 'rgba(15, 15, 15, 0.95)' : 'transparent',
+          backdropFilter: isSticky ? 'blur(16px)' : 'none',
+          borderBottom: isSticky ? '1px solid rgba(184, 134, 11, 0.15)' : 'none',
+        }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-center gap-4 sm:gap-6">
+            {categories.map((cat, idx) => (
+              <motion.button
+                key={cat.key}
+                onClick={() => onTabChange(idx)}
+                className="relative group flex-1 max-w-xs"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {/* Background with Glassmorphism */}
+                <motion.div
+                  className="absolute inset-0 rounded-3xl transition-all duration-300"
+                  animate={{
+                    background: activeTab === idx
+                      ? 'linear-gradient(135deg, rgba(184, 134, 11, 0.25), rgba(212, 160, 23, 0.15))'
+                      : 'rgba(0, 0, 0, 0.25)',
+                    border: activeTab === idx
+                      ? '2px solid rgba(184, 134, 11, 0.7)'
+                      : '1.5px solid rgba(184, 134, 11, 0.15)',
+                    boxShadow: activeTab === idx
+                      ? '0 0 30px rgba(184, 134, 11, 0.4), inset 0 0 20px rgba(184, 134, 11, 0.1)'
+                      : 'none',
+                  }}
+                />
+
+                {/* Content Container */}
+                <div className="relative flex flex-col items-center justify-center p-4 sm:p-6 h-full">
+                  {/* Icon - Animated Visibility */}
+                  <motion.span
+                    className="text-5xl sm:text-6xl overflow-hidden"
+                    animate={{
+                      opacity: isSticky ? 0 : 1,
+                      scale: isSticky ? 0 : (activeTab === idx ? 1.3 : 1),
+                      height: isSticky ? 0 : 'auto',
+                      marginBottom: isSticky ? 0 : '0.5rem',
+                      filter: activeTab === idx ? 'drop-shadow(0 0 12px rgba(184, 134, 11, 0.8))' : 'none',
+                    }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  >
+                    {cat.icon}
+                  </motion.span>
+
+                  {/* Label */}
+                  <motion.p
+                    className="text-center font-bold leading-tight"
+                    animate={{
+                      color: activeTab === idx ? '#D4A017' : '#F5F5DC',
+                      opacity: activeTab === idx ? 1 : 0.65,
+                      fontSize: isSticky ? '0.85rem' : '0.95rem',
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {cat.label}
+                  </motion.p>
+                </div>
+
+                {/* Active Indicator Line */}
+                {activeTab === idx && (
+                  <motion.div
+                    layoutId="activeIndicator"
+                    className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#B8860B] via-[#D4A017] to-[#B8860B]"
+                    style={{ borderRadius: '2px' }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  />
+                )}
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+    </div>
+  );
+}
+
 function ServiceCard({ service, onClick, index }: { service: ServiceItem; onClick: () => void; index: number }) {
   return (
     <motion.div initial={{ opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ delay: index * 0.06, duration: 0.5 }} onClick={onClick} className="relative rounded-2xl overflow-hidden group cursor-pointer h-full" style={{ minHeight: "100%" }}>
@@ -238,17 +344,8 @@ export default function ServicesClient() {
         </div>
       </section>
 
-      {/* TABS */}
-      <section className="px-4 mb-12">
-        <div className="max-w-5xl mx-auto flex justify-center gap-3 flex-wrap">
-          {categories.map((cat, i) => (
-            <motion.button key={cat.key} whileTap={{ scale: 0.95 }} onClick={() => setActiveTab(i)} className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm transition-all duration-300" style={{ background: activeTab === i ? `rgba(184,134,11,0.15)` : "rgba(255,255,255,0.03)", border: `1px solid ${activeTab === i ? "rgba(184,134,11,0.4)" : "rgba(184,134,11,0.1)"}`, color: activeTab === i ? "#B8860B" : "rgba(245,245,220,0.5)", fontWeight: activeTab === i ? 700 : 400 }}>
-              <span>{cat.icon}</span>
-              <span>{cat.label}</span>
-            </motion.button>
-          ))}
-        </div>
-      </section>
+      {/* ROYAL TRIO STICKY NAV */}
+      <RoyalTrioNav activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* SERVICES GRID */}
       <section className="px-4 pb-20">
