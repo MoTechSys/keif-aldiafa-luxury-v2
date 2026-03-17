@@ -103,7 +103,7 @@ export default function Navbar({ deferredPrompt, setDeferredPrompt }: NavbarProp
         }}
         role="banner"
       >
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 py-1.5 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group" aria-label="الصفحة الرئيسية">
             <motion.div
               whileHover={{ rotate: 5, scale: 1.05 }}
