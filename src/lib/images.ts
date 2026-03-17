@@ -148,11 +148,11 @@ export const SAFARJIA_IMAGES = {
 // SERVICES — SAWAS
 // ═══════════════════════════════════════════════════════════════
 export const SAWAS_IMAGES = {
-  mainBg: "/images/services/sawas/sawas-main-bg.webp",
-  teaWorker: "/images/services/sawas/sawas-tea-worker.webp",
-  goldenLamp: "/images/services/sawas/sawas-golden-lamp.webp",
-  juiceSeller: "/images/services/sawas/sawas-juice-seller.webp",
-  goldenTree: "/images/services/sawas/sawas-golden-tree.webp",
+  mainBg: "/images/services/sawas/sawas-main.webp",
+  style1: "/images/services/sawas/sawas-style-1.webp",
+  style2: "/images/services/sawas/sawas-style-2.webp",
+  style3: "/images/services/sawas/sawas-style-3.webp",
+  style4: "/images/services/sawas/sawas-style-4.webp",
 };
 
 // ═══════════════════════════════════════════════════════════════
