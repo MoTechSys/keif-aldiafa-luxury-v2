@@ -185,7 +185,16 @@ export const SERVICES_MALE = {
   },
   safarjia: Array.from({ length: 6 }, (_, i) => `/images/services/male/safarjia/safarjia-${i + 1}.webp`),
   sawas: Array.from({ length: 5 }, (_, i) => `/images/services/male/sawas/sawas-${i + 1}.webp`),
-  souqiya: Array.from({ length: 8 }, (_, i) => `/images/services/male/souqiya/souqiya-${i + 1}.webp`),
+  souqiya: [
+    "https://raw.githubusercontent.com/moain2026/allimg/main/خدماتنا/الخدمات%20الرجاليه/سوقيا%20زمزم/زمزم_1.webp",
+    "https://raw.githubusercontent.com/moain2026/allimg/main/خدماتنا/الخدمات%20الرجاليه/سوقيا%20زمزم/زمزم_2.webp",
+    "https://raw.githubusercontent.com/moain2026/allimg/main/خدماتنا/الخدمات%20الرجاليه/سوقيا%20زمزم/زمزم_3.webp",
+    "https://raw.githubusercontent.com/moain2026/allimg/main/خدماتنا/الخدمات%20الرجاليه/سوقيا%20زمزم/زمزم_4.webp",
+    "https://raw.githubusercontent.com/moain2026/allimg/main/خدماتنا/الخدمات%20الرجاليه/سوقيا%20زمزم/زمزم_5.webp",
+    "https://raw.githubusercontent.com/moain2026/allimg/main/خدماتنا/الخدمات%20الرجاليه/سوقيا%20زمزم/زمزم_6.webp",
+    "https://raw.githubusercontent.com/moain2026/allimg/main/خدماتنا/الخدمات%20الرجاليه/سوقيا%20زمزم/زمزم_7.webp",
+  ],
+  souqiyaMain: "https://raw.githubusercontent.com/moain2026/allimg/main/خدماتنا/الخدمات%20الرجاليه/سوقيا%20زمزم/الصفحه_الرئيسيه_للسوقيا_زمزم.webp",
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -279,7 +288,7 @@ export const CONF_IMG = EVENT_IMAGES[12];
 // ═══════════════════════════════════════════════════════════════
 export const SERVICE_IMAGES = {
   maleWaiter: SERVICES_MALE.hosts.main,
-  zamzam: SERVICES_MALE.safarjia[1],
+  zamzam: "https://raw.githubusercontent.com/moain2026/allimg/main/خدماتنا/الخدمات%20الرجاليه/سوقيا%20زمزم/الصفحه_الرئيسيه_للسوقيا_زمزم.webp",
   butler: SERVICES_MALE.safarjia[2],
   sawas: SAWAS_IMAGES.mainBg,
   hostess: FEMALE_SERVICES_IMAGES.mainBg,

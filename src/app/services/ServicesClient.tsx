@@ -26,7 +26,19 @@ const categories: ServiceCategory[] = [
     key: "male", label: "الخدمات الرجالية", sublabel: "Male Hospitality", icon: "👨‍💼", color: "#B8860B",
     services: [
       { id: "hosts", title: "مضيفون", subtitle: "Male Hosts", img: SERVICE_IMAGES.maleWaiter, description: "مضيفون محترفون مدربون على أعلى معايير الضيافة الدولية والأصالة العربية.", features: ["زي رسمي أنيق", "خبرة +5 سنوات", "لغات متعددة", "بروتوكول VIP"], outfits: [{ name: "حزام", img: OUTFIT_IMAGES.hizam, desc: "زي رسمي بحزام أنيق" }, { name: "دقلة", img: OUTFIT_IMAGES.dagla, desc: "دقلة سعودية أصيلة" }, { name: "دقلة وجنبية", img: OUTFIT_IMAGES.daglaJanbiya, desc: "دقلة مع جنبية تراثية" }, { name: "سديرية", img: OUTFIT_IMAGES.sideriya, desc: "سديرية أنيقة" }, { name: "مكاوي", img: OUTFIT_IMAGES.makkawi, desc: "زي مكاوي تراثي" }] },
-      { id: "zamzam", title: "سقّاء زمزم", subtitle: "Zamzam Server", img: SERVICE_IMAGES.zamzam, description: "سقاء زمزم بأسلوب تراثي فاخر يعكس أصالة الضيافة السعودية.", features: ["زي تراثي أصيل", "إبريق نحاسي فاخر", "خدمة شخصية", "تقديم فوري"], outfits: [{ name: "زي السقّاء التراثي", img: OUTFIT_IMAGES.safarjia, desc: "زي تراثي أصيل" }] },
+      { 
+        id: "zamzam", 
+        title: "سقّاء زمزم", 
+        subtitle: "Zamzam Server", 
+        img: SERVICE_IMAGES.zamzam, 
+        description: "سقاء زمزم بأسلوب تراثي فاخر يعكس أصالة الضيافة السعودية، حيث نقدم مياه زمزم المباركة بأسلوب يجمع بين الهيبة والجمال.", 
+        features: ["زي تراثي أصيل", "إبريق نحاسي فاخر", "خدمة شخصية", "تقديم فوري"], 
+        outfits: SERVICES_MALE.souqiya.map((img, index) => ({
+          name: `سقيا زمزم - ${index + 1}`,
+          img: img,
+          desc: "تقديم مياه زمزم بأسلوب تراثي فاخر"
+        }))
+      },
       { id: "safarjia", title: "السفرجية", subtitle: "Coffee Butler", img: SAFARJIA_IMAGES.mainBg, description: "سفرجية محترفة تقدم القهوة السعودية الأصيلة بأسلوب يليق بضيوفكم، مع تقديم فاخر وخدمة استثنائية.", features: ["قهوة سعودية طازجة", "دلال نحاسية أصيلة", "تمر وحلويات فاخرة", "خدمة مستمرة"], outfits: [{ name: "زي سفرجية - 1", img: SAFARJIA_IMAGES.safarji1, desc: "زي تقليدي فاخر مع دلال نحاسية" }, { name: "زي سفرجية - 2", img: SAFARJIA_IMAGES.safarji2, desc: "ثوب سعودي أصيل مع بشت فاخر" }, { name: "زي سفرجية - 3", img: SAFARJIA_IMAGES.safarji3, desc: "ملابس تراثية بتصميم راقٍ" }, { name: "زي سفرجية - 4", img: SAFARJIA_IMAGES.safarji4, desc: "زي فاخر للمناسبات الخاصة" }] },
       { id: "sawas", title: "سوّاس", subtitle: "Traditional Hospitality", img: SAWAS_IMAGES.mainBg, description: "تجربة ضيافة تراثية حية، حيث يقدم السوّاس بزيّه الفلكلوري الأصيل وإبريقه النحاسي المشروبات بأسلوب استعراضي فاخر يعكس كرم الضيافة.", features: ["مشروبات متنوعة", "زي فلكلوري أصيل", "استعراض وتقديم حي", "إبريق نحاسي فاخر"], outfits: [{ name: "الزي التراثي الأصيل", img: SAWAS_IMAGES.style1, desc: "تقديم المشروبات بأسلوب فلكلوري يعكس الأصالة" }, { name: "ضيافة استعراضية", img: SAWAS_IMAGES.style2, desc: "أجواء تراثية فخمة تلفت أنظار ضيوفكم" }, { name: "تقديم فاخر", img: SAWAS_IMAGES.style3, desc: "تكامل بين جودة الضيافة والمظهر التراثي" }, { name: "أجواء متكاملة", img: SAWAS_IMAGES.style4, desc: "عناصر ديكورية تراثية تصاحب خدمة التقديم" }] },
     ],
