@@ -29,7 +29,7 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-5">
-              <DallahLogo size={44} />
+              <DallahLogo size={60} />
               <div>
                 <p className="gold-gradient-text" style={{ fontSize: "1.3rem", fontWeight: 800 }}>كيف الضيافة</p>
                 <p className="text-[#B8860B]/50" style={{ fontSize: "0.62rem", letterSpacing: "0.25em" }}>KEIF AL-DIAFA · LUXURY HOSPITALITY</p>
