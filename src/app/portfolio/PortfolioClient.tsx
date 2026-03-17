@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "motion/react";
+import { motion, AnimatePresence, useMotionValue, useTransform, animate, useScroll } from "motion/react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import {
@@ -11,7 +11,7 @@ import {
 } from "@/lib/images";
 
 const WA = "966508252134";
-const ITEMS_PER_PAGE = 12; // عدد الصور في كل صفحة
+const ITEMS_PER_PAGE = 12;
 
 type FilterType = "all" | "events" | "weddings" | "equipment";
 
@@ -21,23 +21,17 @@ interface PortfolioItem {
   category: FilterType;
 }
 
-// ─────────────────────────────────────────────
-// بيانات الصور
-// ─────────────────────────────────────────────
 const portfolioItems: PortfolioItem[] = [
-  // الفعاليات
   ...EVENT_IMAGES.map((img, i) => ({
     id: i + 1,
     image: img,
     category: "events" as FilterType,
   })),
-  // الأعراس
   ...WEDDING_IMAGES.map((img, i) => ({
     id: 100 + i + 1,
     image: img,
     category: "weddings" as FilterType,
   })),
-  // المعدات
   ...EQUIPMENT_IMAGES.map((img, i) => ({
     id: 200 + i + 1,
     image: img,
@@ -53,7 +47,7 @@ const filters: { key: FilterType; label: string; icon: string }[] = [
 ];
 
 // ─────────────────────────────────────────────
-// Lightbox بكامل حجم الشاشة
+// Lightbox
 // ─────────────────────────────────────────────
 function Lightbox({
   items,
@@ -114,108 +108,30 @@ function Lightbox({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[90] flex items-center justify-center bg-black/95"
+      className="fixed inset-0 z-[90] flex items-center justify-center"
       onClick={onClose}
     >
-      {/* زر إغلاق */}
+      <motion.div
+        className="absolute inset-0"
+        style={{ background: "rgba(5,4,2,0.95)", backdropFilter: "blur(24px)", opacity: bgOpacity }}
+      />
+
       <button
         onClick={onClose}
-        className="absolute top-4 left-4 z-20 w-10 h-10 rounded-full flex items-center justify-center text-[#F5F5DC]/70 hover:text-[#F5F5DC] transition-colors md:top-6 md:left-6 md:w-12 md:h-12"
-        style={{
-          background: "rgba(0,0,0,0.55)",
-          border: "1px solid rgba(184,134,11,0.2)",
-        }}
-        aria-label="إغلاق"
+        className="absolute top-5 left-5 z-20 w-11 h-11 rounded-full flex items-center justify-center text-[#F5F5DC]/70 hover:text-[#F5F5DC] transition-colors"
+        style={{ background: "rgba(0,0,0,0.55)", border: "1px solid rgba(184,134,11,0.2)" }}
       >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="w-5 h-5 md:w-6 md:h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M6 18L18 6M6 6l12 12"
-          />
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
 
-      {/* عداد الصور */}
-      <div
-        className="absolute top-4 right-4 z-20 px-3 py-1.5 rounded-full text-xs md:text-sm text-[#B8860B] md:top-6 md:right-6"
-        style={{
-          background: "rgba(0,0,0,0.55)",
-          border: "1px solid rgba(184,134,11,0.2)",
-        }}
-      >
+      <div className="absolute top-5 right-5 z-20 px-3 py-1.5 rounded-full text-xs text-[#B8860B]"
+        style={{ background: "rgba(0,0,0,0.55)", border: "1px solid rgba(184,134,11,0.2)" }}>
         {index + 1} / {items.length}
       </div>
 
-      {/* أزرار التنقل */}
-      {index > 0 && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            goTo(index - 1);
-          }}
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-[#F5F5DC]/70 hover:text-[#B8860B] transition-colors"
-          style={{
-            background: "rgba(0,0,0,0.55)",
-            border: "1px solid rgba(184,134,11,0.2)",
-          }}
-          aria-label="السابق"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="w-5 h-5 md:w-6 md:h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
-      )}
-      {index < items.length - 1 && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            goTo(index + 1);
-          }}
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-[#F5F5DC]/70 hover:text-[#B8860B] transition-colors"
-          style={{
-            background: "rgba(0,0,0,0.55)",
-            border: "1px solid rgba(184,134,11,0.2)",
-          }}
-          aria-label="التالي"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="w-5 h-5 md:w-6 md:h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-      )}
-
-      {/* الصورة بكامل الحجم */}
-      <div
-        className="relative z-10 w-full h-full flex items-center justify-center px-2 md:px-4"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="relative z-10 w-full h-full flex items-center justify-center px-2 md:px-4" onClick={(e) => e.stopPropagation()}>
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={item.id}
@@ -227,12 +143,9 @@ function Lightbox({
             transition={{ type: "spring", stiffness: 320, damping: 38 }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.18}
+            style={{ x: dragX }}
             onDragEnd={handleDragEnd}
             className="w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing select-none"
-            style={{
-              x: dragX,
-            }}
           >
             <ImageWithFallback
               src={item.image}
@@ -248,194 +161,205 @@ function Lightbox({
 }
 
 // ─────────────────────────────────────────────
-// المكون الرئيسي
+// Royal Trio Sticky Navigation Component
+// ─────────────────────────────────────────────
+function RoyalTrioNav({ activeFilter, onFilterChange }: { activeFilter: FilterType; onFilterChange: (key: FilterType) => void }) {
+  const [isSticky, setIsSticky] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+
+  useEffect(() => {
+    const unsubscribe = scrollY.onChange((latest) => {
+      if (containerRef.current) {
+        const containerTop = containerRef.current.getBoundingClientRect().top;
+        setIsSticky(containerTop <= 0);
+      }
+    });
+    return () => unsubscribe();
+  }, [scrollY]);
+
+  return (
+    <div ref={containerRef} className="w-full">
+      <motion.section
+        ref={navRef}
+        className={`w-full transition-all duration-300 ${isSticky ? 'fixed top-0 left-0 right-0 z-50' : 'relative'}`}
+        animate={{
+          paddingTop: isSticky ? '12px' : '16px',
+          paddingBottom: isSticky ? '12px' : '16px',
+          background: isSticky ? 'rgba(15, 15, 15, 0.95)' : 'transparent',
+          backdropFilter: isSticky ? 'blur(16px)' : 'none',
+          borderBottom: isSticky ? '1px solid rgba(184, 134, 11, 0.15)' : 'none',
+        }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-center gap-2 sm:gap-3">
+            {filters.map((filter) => (
+              <motion.button
+                key={filter.key}
+                onClick={() => onFilterChange(filter.key)}
+                className="relative group flex-1 max-w-sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {/* Background with Glassmorphism */}
+                <motion.div
+                  className="absolute inset-0 rounded-3xl transition-all duration-300"
+                  animate={{
+                    background: activeFilter === filter.key
+                      ? 'linear-gradient(135deg, rgba(184, 134, 11, 0.25), rgba(212, 160, 23, 0.15))'
+                      : 'rgba(0, 0, 0, 0.25)',
+                    border: activeFilter === filter.key
+                      ? '2px solid rgba(184, 134, 11, 0.7)'
+                      : '1.5px solid rgba(184, 134, 11, 0.15)',
+                    boxShadow: activeFilter === filter.key
+                      ? '0 0 30px rgba(184, 134, 11, 0.4), inset 0 0 20px rgba(184, 134, 11, 0.1)'
+                      : 'none',
+                  }}
+                />
+
+                {/* Content Container */}
+                <div className="relative flex flex-col items-center justify-center p-2 sm:p-3 h-full min-h-[50px] sm:min-h-[60px]">
+                  <motion.p
+                    className="text-[9px] sm:text-[10px] text-center font-medium leading-tight"
+                    style={{
+                      textShadow: '0 1px 4px rgba(0, 0, 0, 0.5), 0 0 8px rgba(184, 134, 11, 0.2)',
+                    }}
+                    animate={{
+                      color: activeFilter === filter.key ? '#D4A017' : '#F5F5DC',
+                      opacity: activeFilter === filter.key ? 1 : 0.65,
+                      fontSize: isSticky ? '0.65rem' : '0.7rem',
+                    }}
+                    transition={{ type: 'spring', stiffness: 280, damping: 20, mass: 0.8, delay: 0.05 }}
+                    layout
+                  >
+                    {filter.label}
+                  </motion.p>
+                </div>
+
+                {/* Active Indicator Line */}
+                {activeFilter === filter.key && (
+                  <motion.div
+                    layoutId="activeIndicator"
+                    className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#B8860B] via-[#D4A017] to-[#B8860B]"
+                    style={{ borderRadius: '2px' }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  />
+                )}
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Main Component
 // ─────────────────────────────────────────────
 export default function PortfolioClient() {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
-  // تصفية الصور
-  const filteredItems =
-    activeFilter === "all"
-      ? portfolioItems
-      : portfolioItems.filter((item) => item.category === activeFilter);
+  const filteredItems = activeFilter === "all"
+    ? portfolioItems
+    : portfolioItems.filter((item) => item.category === activeFilter);
 
-  // الصور المعروضة حالياً
   const displayedItems = filteredItems.slice(0, displayCount);
   const hasMore = displayCount < filteredItems.length;
 
-  // معالج عرض المزيد
   const handleLoadMore = () => {
     setDisplayCount((prev) => prev + ITEMS_PER_PAGE);
   };
 
-  // إعادة تعيين العداد عند تغيير الفلتر
   useEffect(() => {
     setDisplayCount(ITEMS_PER_PAGE);
   }, [activeFilter]);
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
+    <div className="min-h-screen bg-[#0f0f0f] pb-32">
       {/* Hero Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="relative py-8 md:py-16 px-4 md:px-8"
-      >
-        <Breadcrumbs />
+      <section className="relative pt-8 pb-12 px-4 overflow-hidden">
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 20%, rgba(184,134,11,0.08) 0%, transparent 60%)" }} />
+        <div className="max-w-5xl mx-auto text-center relative z-10">
+          <Breadcrumbs />
+          <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-[#B8860B] mb-3 mt-8" style={{ fontSize: "0.75rem", letterSpacing: "0.35em" }}>✦ معرض أعمالنا ✦</motion.p>
+          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-[#F5F5DC] mb-4 font-tajawal" style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", fontWeight: 900, lineHeight: 1.15}}>توثيق للحظات<br /><span className="gold-gradient-text">الفخامة والتميز</span></motion.h1>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-[#F5F5DC]/55 max-w-xl mx-auto text-sm leading-relaxed">استعرض أفضل لحظاتنا من الفعاليات والأعراس والمعدات الفاخرة التي تعكس جودة خدماتنا</motion.p>
+        </div>
+      </section>
 
-        <div className="max-w-7xl mx-auto mt-6 md:mt-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-center mb-8 md:mb-12"
-          >
-            <h1
-              className="text-3xl md:text-5xl font-bold mb-3 md:mb-4"
-              style={{
-                background:
-                  "linear-gradient(135deg, #B8860B 0%, #D4A017 50%, #B8860B 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              معرض أعمالنا
-            </h1>
-            <p className="text-[#F5F5DC]/70 text-base md:text-xl max-w-2xl mx-auto px-2">
-              استعرض أفضل لحظاتنا من الفعاليات والأعراس والمعدات الفاخرة
-            </p>
-          </motion.div>
+      {/* Royal Trio Sticky Navigation */}
+      <RoyalTrioNav activeFilter={activeFilter} onFilterChange={setActiveFilter} />
 
-          {/* Filters */}
+      {/* Gallery Grid */}
+      <div className="container mx-auto px-4 pt-12">
+        <AnimatePresence mode="popLayout">
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8 md:mb-12"
-          >
-            {filters.map((filter) => (
-              <motion.button
-                key={filter.key}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setActiveFilter(filter.key)}
-                className={`px-4 md:px-6 py-2 md:py-2.5 rounded-full font-medium transition-all duration-300 flex items-center gap-2 text-sm md:text-base ${
-                  activeFilter === filter.key
-                    ? "text-white"
-                    : "text-[#F5F5DC]/60 hover:text-[#F5F5DC]"
-                }`}
-                style={{
-                  background:
-                    activeFilter === filter.key
-                      ? "linear-gradient(135deg, #B8860B, #D4A017)"
-                      : "rgba(184,134,11,0.1)",
-                  border:
-                    activeFilter === filter.key
-                      ? "1px solid rgba(212,160,23,0.5)"
-                      : "1px solid rgba(184,134,11,0.2)",
-                }}
-              >
-                <span>{filter.icon}</span>
-                {filter.label}
-              </motion.button>
-            ))}
-          </motion.div>
-
-          {/* Gallery Grid - محسّن للجوال */}
-          <motion.div
-            ref={containerRef}
+            key={activeFilter}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4"
+            exit={{ opacity: 0 }}
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
           >
-            <AnimatePresence mode="popLayout">
-              {displayedItems.map((item, idx) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ delay: idx * 0.05, duration: 0.3 }}
-                  onClick={() => setSelectedIndex(idx)}
-                  className="group relative cursor-pointer overflow-hidden rounded-lg md:rounded-2xl"
-                  style={{
-                    aspectRatio: "1/1",
-                    background: "rgba(184,134,11,0.1)",
-                    border: "1px solid rgba(184,134,11,0.15)",
-                  }}
-                >
-                  {/* الصورة */}
-                  <ImageWithFallback
-                    src={item.image}
-                    alt={`صورة ${idx + 1}`}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-
-                  {/* Overlay */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end justify-center p-2 md:p-4"
-                  >
-                    <motion.div
-                      initial={{ y: 20, opacity: 0 }}
-                      whileHover={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                      className="text-center"
-                    >
-                      <p className="text-[#B8860B] text-xs md:text-sm font-medium">
-                        اضغط للعرض الكامل
-                      </p>
-                    </motion.div>
-                  </motion.div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
-
-          {/* Load More Button */}
-          {hasMore && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              className="flex justify-center mt-8 md:mt-12"
-            >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleLoadMore}
-                className="px-6 md:px-8 py-3 md:py-3.5 rounded-full font-bold text-white transition-all duration-300 text-sm md:text-base"
-                style={{
-                  background: "linear-gradient(135deg, #B8860B, #D4A017)",
-                  boxShadow: "0 8px 30px rgba(184,134,11,0.3)",
-                }}
+            {displayedItems.map((item, idx) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 32 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: idx * 0.05, duration: 0.5 }}
+                onClick={() => setSelectedIndex(idx)}
+                className="group relative rounded-2xl overflow-hidden cursor-pointer aspect-square"
               >
-                عرض المزيد ({filteredItems.length - displayCount} متبقي)
-              </motion.button>
-            </motion.div>
-          )}
+                <ImageWithFallback
+                  src={item.image}
+                  alt={`صورة ${idx + 1}`}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 img-overlay" />
+                <div className="absolute inset-0 bg-[#B8860B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-black/50 backdrop-blur-md border border-[#B8860B]/30">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#D4A017" strokeWidth="2" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                    </svg>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
-          {/* Empty State */}
-          {displayedItems.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-16"
+        {/* Load More Button */}
+        {hasMore && (
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex justify-center mt-16">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleLoadMore}
+              className="px-10 py-4 rounded-full font-bold text-[#0f0f0f] transition-all duration-300 text-sm"
+              style={{
+                background: "linear-gradient(135deg, #FFD700, #D4A017, #B8860B)",
+                boxShadow: "0 8px 30px rgba(184,134,11,0.4)",
+              }}
             >
-              <p className="text-[#F5F5DC]/50 text-lg">
-                لا توجد صور في هذه الفئة
-              </p>
-            </motion.div>
-          )}
-        </div>
-      </motion.section>
+              عرض المزيد ({filteredItems.length - displayCount} متبقي)
+            </motion.button>
+          </motion.div>
+        )}
+
+        {/* Empty State */}
+        {displayedItems.length === 0 && (
+          <div className="text-center py-24">
+            <p className="text-[#F5F5DC]/40 text-lg">لا توجد صور في هذه الفئة حالياً</p>
+          </div>
+        )}
+      </div>
 
       {/* Lightbox */}
       <AnimatePresence>
