@@ -270,8 +270,10 @@ function StickyMicroNav({ activeTab, onTabChange }: { activeTab: string; onTabCh
                 }}
               />
 
-              {/* Content Container - Vertical Stacking */}
-              <div className="relative flex flex-col items-center justify-between gap-2 sm:gap-3 p-3 sm:p-4 h-full w-full">
+              {/* Content Container - Vertical Stacking with Dynamic Height */}
+              <div className={`relative flex flex-col items-center w-full ${
+                isSticky ? 'justify-center gap-0 p-2 sm:p-2 h-12 sm:h-14' : 'justify-between gap-2 sm:gap-3 p-3 sm:p-4 h-full'
+              }`}>
                 {/* Icon - Animated Visibility with Staggered Transition */}
                 <motion.span
                   className="text-3xl sm:text-4xl flex-shrink-0"
